@@ -1,0 +1,8 @@
+fdf
+*.dSYM
+*.sw*
+*.a
+*.dylib
+*.o
+*.out
+.DS_Store
