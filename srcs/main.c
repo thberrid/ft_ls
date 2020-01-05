@@ -20,7 +20,7 @@ int		main(int ac, char **av)
 	if ((retrn = options_set(ac, av, &options)))
 		return (0);
 	if ((retrn = dir_browse(&options)))
-		return (0);
+		ft_putendl(strerror(errno));
 	options_free(&options);
 	return (0);
 }

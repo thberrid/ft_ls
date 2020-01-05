@@ -19,7 +19,8 @@ int		dir_browse(t_options *options)
 	t_stat 		file;
 	int			retrn;
 
-	dir_open = opendir(options->path);
+	if (!(dir_open = opendir(options->path)))
+		return (1);
 	while ((dir_current = readdir(dir_open)))
 	{
 		retrn = stat(dir_current->d_name, &file);
@@ -27,7 +28,6 @@ int		dir_browse(t_options *options)
 		ft_putstr(" ");
 		ft_putnbr(file.st_mode);
 		ft_putchar('\n');
-	
 	}
 	closedir(dir_open);
 	return (0);
