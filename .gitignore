@@ -1,8 +1,7 @@
-fdf
+ft_ls
 *.dSYM
 *.sw*
 *.a
-*.dylib
 *.o
 *.out
 .DS_Store
