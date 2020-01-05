@@ -6,7 +6,7 @@
 #    By: thberrid <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/29 19:26:47 by thberrid          #+#    #+#              #
-#    Updated: 2020/01/05 11:01:10 by thberrid         ###   ########.fr        #
+#    Updated: 2020/01/05 11:05:52 by thberrid         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ DIR_O	= obj
 DIR_H	= includes
 NAME_C	= main.c
 NAME_O	= $(NAME_C:.c=.o)
-NAME_H	= ft_ls.h \
+NAME_H	= ft_ls.h
 FILES_C	= $(addprefix $(DIR_C)/, $(NAME_C))
 FILES_O	= $(addprefix $(DIR_O)/, $(NAME_O))
 FILES_H	= $(addprefix $(DIR_H)/, $(NAME_H))
