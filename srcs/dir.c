@@ -23,7 +23,11 @@ int		dir_browse(t_options *options)
 	while ((dir_current = readdir(dir_open)))
 	{
 		retrn = stat(dir_current->d_name, &file);
-		ft_putendl(dir_current->d_name);
+		ft_putstr(dir_current->d_name);
+		ft_putstr(" ");
+		ft_putnbr(file.st_mode);
+		ft_putchar('\n');
+	
 	}
 	closedir(dir_open);
 	return (0);
