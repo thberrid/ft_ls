@@ -15,7 +15,9 @@ NAME	= ft_ls
 DIR_C 	= srcs
 DIR_O	= obj
 DIR_H	= includes
-NAME_C	= main.c
+NAME_C	= main.c \
+			dir.c \
+			options.c
 NAME_O	= $(NAME_C:.c=.o)
 NAME_H	= ft_ls.h
 FILES_C	= $(addprefix $(DIR_C)/, $(NAME_C))

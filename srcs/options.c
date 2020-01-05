@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   options.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thberrid <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/05 11:01:44 by thberrid          #+#    #+#             */
-/*   Updated: 2020/01/05 11:06:07 by thberrid         ###   ########.fr       */
+/*   Created: 2020/01/05 11:35:38 by thberrid          #+#    #+#             */
+/*   Updated: 2020/01/05 11:35:40 by thberrid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-int		main(int ac, char **av)
+int		options_set(int ac, char **av, t_options *options)
 {
-	t_options	options;
-	int			retrn;
-
-	if ((retrn = options_set(ac, av, &options)))
-		return (0);
-	if ((retrn = dir_browse(&options)))
-		return (0);
-	options_free(&options);
+	ft_bzero(options, sizeof(t_options));
+	if (ac < 2)
+		options->path = ft_strdup(".");
+	else
+		options->path = ft_strdup(av[1]);
 	return (0);
+}
+
+void	options_free(t_options *options)
+{
+	ft_strdel(&options->path);
 }
