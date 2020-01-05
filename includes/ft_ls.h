@@ -15,7 +15,37 @@
 
 # include <libft.h>
 # include <dirent.h>
+# include <stdio.h>
 # include <sys/stat.h>
+# include <sys/errno.h>
+
+# define LS_ERROR_INTRO "ls"
+
+extern int		errno;
+
+/*
+** double list
+*/
+
+typedef struct	s_dlist
+{
+	struct s_dlist	*prev;
+	struct s_dlist	*next;
+	void			*content;
+}				t_dlist;
+
+typedef struct 	s_hlist
+{
+	struct s_dlist	*head;
+	struct s_dlist	*tail;
+	size_t			len;
+}				t_hlist;
+
+t_dlist		*dlist_create(void *content, size_t size);
+void		dlist_push(t_dlist *lst, t_hlist *main);
+void		dlist_unshift(t_dlist *lst, t_hlist *main);
+void		dlist_del(t_hlist *main, void (*f)(t_dlist *));
+
 
 /*
 ** struct stat {

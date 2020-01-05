@@ -17,6 +17,7 @@ DIR_O	= obj
 DIR_H	= includes
 NAME_C	= main.c \
 			dir.c \
+			list.c \
 			options.c
 NAME_O	= $(NAME_C:.c=.o)
 NAME_H	= ft_ls.h
