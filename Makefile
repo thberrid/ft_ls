@@ -6,7 +6,7 @@
 #    By: thberrid <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/29 19:26:47 by thberrid          #+#    #+#              #
-#    Updated: 2019/12/07 10:50:31 by thberrid         ###   ########.fr        #
+#    Updated: 2020/01/05 10:36:01 by thberrid         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,7 @@ FILES_C	= $(addprefix $(DIR_C)/, $(NAME_C))
 FILES_O	= $(addprefix $(DIR_O)/, $(NAME_O))
 FILES_H	= $(addprefix $(DIR_H)/, $(NAME_H))
 LIBFT	= ./libft/libft.a
-MLX		= ./libmlx.dylib
+MLX		= ./minilibx/libmlx.dylib
 FLAGS	= -Wall -Wextra -Werror -g3
 
 all : $(NAME)
@@ -65,7 +65,7 @@ $(LIBFT) :
 
 $(MLX) :
 	make -C ./minilibx/
-	cp ./minilibx/libmlx.dylib libmlx.dylib
+#	cp ./minilibx/libmlx.dylib libmlx.dylib
 
 .PHONY : clean
 clean :
