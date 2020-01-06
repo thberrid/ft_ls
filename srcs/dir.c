@@ -12,28 +12,39 @@
 
 #include <ft_ls.h>
 
-int		dir_browse(t_options *options)
+static int	dirlst_set(t_dirlst *dest, t_dirent *src)
 {
-	DIR 		*dir_open;
-	t_dirent	*dir_current;
-	t_stat 		file;
-	int			retrn;
-
-	if (!(dir_open = opendir(options->path)))
+	if (!(dest->dirstat = ft_memalloc(sizeof(t_stat))))
 		return (1);
-	while ((dir_current = readdir(dir_open)))
-	{
-		retrn = stat(dir_current->d_name, &file);
-		ft_putstr(dir_current->d_name);
-		ft_putstr(" ");
-		ft_putnbr(file.st_mode);
-		ft_putchar('\n');
-	}
-	closedir(dir_open);
+	if (!(dest->dirent = ft_memalloc(sizeof(t_dirent))))
+		return (1);
+	ft_memcpy(dest->dirent, src, sizeof(t_dirent));
 	return (0);
 }
 
-void	dir_free(t_dirent *dir)
+int			dir_get(t_options *options, t_hlist *main)
 {
-	free(dir);
+	DIR			*dir_open;
+	t_dlist		*new;
+	t_dirlst	dirlst;
+	t_dirent	*this_dir;
+	char		*path;
+
+	if (!(dir_open = opendir(options->path)))
+		return (1);
+	ft_bzero(&dirlst, sizeof(t_dirlst));
+	while ((this_dir = readdir(dir_open)))
+	{
+		if (dirlst_set(&dirlst, this_dir))
+			return (1);
+		path = ft_strjoin(options->path, dirlst.dirent->d_name);
+		if (lstat(path, dirlst.dirstat))
+			return (1);
+		if (!(new = dlist_create(&dirlst, sizeof(t_dirlst))))
+			return (1);
+		dlist_push(new, main);
+		ft_strdel(&path);
+	}
+	closedir(dir_open);
+	return (0);
 }

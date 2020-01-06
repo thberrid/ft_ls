@@ -21,51 +21,49 @@
 
 # define LS_ERROR_INTRO "ls"
 
-extern int		errno;
-
 /*
 ** double list
 */
 
-typedef struct	s_dlist
+typedef struct			s_dlist
 {
 	struct s_dlist	*prev;
 	struct s_dlist	*next;
 	void			*content;
-}				t_dlist;
+}						t_dlist;
 
-typedef struct 	s_hlist
+typedef struct			s_hlist
 {
 	struct s_dlist	*head;
 	struct s_dlist	*tail;
 	size_t			len;
-}				t_hlist;
+}						t_hlist;
 
-t_dlist		*dlist_create(void *content, size_t size);
-void		dlist_push(t_dlist *lst, t_hlist *main);
-void		dlist_unshift(t_dlist *lst, t_hlist *main);
-void		dlist_del(t_hlist *main, void (*f)(t_dlist *));
-
+t_dlist					*dlist_create(void *content, size_t size);
+void					dlist_init(t_dlist *lst, t_hlist *main);
+void					dlist_push(t_dlist *lst, t_hlist *main);
+void					dlist_unshift(t_dlist *lst, t_hlist *main);
+void					dlist_foreach(t_hlist *main, void (*f)(t_dlist *));
 
 /*
 ** struct stat {
-**    dev_t     st_dev;      ID of device containing file 
-**    ino_t     st_ino;      inode number 
-**    mode_t    st_mode;     protection 
-**    nlink_t   st_nlink;    number of hard links 
-**    uid_t     st_uid;      user ID of owner 
-**    gid_t     st_gid;      group ID of owner 
-**    dev_t     st_rdev;     device ID (if special file) 
-**    off_t     st_size;     total size, in bytes 
-**    blksize_t st_blksize;  blocksize for file system I/O 
-**    blkcnt_t  st_blocks;   number of 512B blocks allocated 
-**    time_t    st_atime;    time of last access 
-**    time_t    st_mtime;    time of last modification 
-**    time_t    st_ctime;    time of last status change 
+**    dev_t     st_dev;      ID of device containing file
+**    ino_t     st_ino;      inode number
+**    mode_t    st_mode;     protection
+**    nlink_t   st_nlink;    number of hard links
+**    uid_t     st_uid;      user ID of owner
+**    gid_t     st_gid;      group ID of owner
+**    dev_t     st_rdev;     device ID (if special file)
+**    off_t     st_size;     total size, in bytes
+**    blksize_t st_blksize;  blocksize for file system I/O
+**    blkcnt_t  st_blocks;   number of 512B blocks allocated
+**    time_t    st_atime;    time of last access
+**    time_t    st_mtime;    time of last modification
+**    time_t    st_ctime;    time of last status change
 ** };
 */
 
-typedef struct	stat	t_stat;
+typedef struct stat		t_stat;
 
 /*
 ** struct dirent {
@@ -75,26 +73,37 @@ typedef struct	stat	t_stat;
 **    unsigned char  d_type;      type of file; not supported
 **                                   by all file system types
 **    char           d_name[256]; filename
-};
+** };
 */
 
-typedef struct	dirent	t_dirent;
+typedef struct dirent	t_dirent;
 
 typedef struct			s_options
 {
-	char	*path;
+	char				*path;
+	unsigned int		flags;
 }						t_options;
 
 /*
 ** options
 */
 
-int		options_set(int ac, char **av, t_options *options);
-void	options_free(t_options *options);
+int						options_set(int ac, char **av, t_options *options);
+void					options_free(t_options *options);
 
 /*
 ** directories
 */
-int		dir_browse(t_options *options);
+
+int						dir_get(t_options *options, t_hlist *main);
+
+typedef struct			s_dirlst
+{
+	t_dirent	*dirent;
+	t_stat		*dirstat;
+}						t_dirlst;
+
+void					dirlst_print(t_dlist *lst);
+void					dirlist_del(t_dlist *lst);
 
 #endif

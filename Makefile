@@ -17,6 +17,7 @@ DIR_O	= obj
 DIR_H	= includes
 NAME_C	= main.c \
 			dir.c \
+			dirlst.c \
 			list.c \
 			options.c
 NAME_O	= $(NAME_C:.c=.o)
@@ -30,13 +31,13 @@ FLAGS	= -Wall -Wextra -Werror -g3
 all : $(NAME)
 
 $(NAME) : $(FILES_O) $(FILES_H) $(LIBFT) $(MLX)
-	gcc -I ./$(DIR_H) -I ./libft/includes -L ./libft/ -lft -o $(NAME) $(FILES_O)
-#	gcc -fsanitize=address -I ./$(DIR_H) -I ./libft/includes -L ./libft/ -lft -o $(NAME) $(FILES_O)
+#	gcc -I ./$(DIR_H) -I ./libft/includes -L ./libft/ -lft -o $(NAME) $(FILES_O)
+	gcc -fsanitize=address -I ./$(DIR_H) -I ./libft/includes -L ./libft/ -lft -o $(NAME) $(FILES_O)
  
 $(DIR_O)/%.o : $(DIR_C)/%.c $(FILES_H)
 	@ mkdir -p $(DIR_O)
-	gcc $(FLAGS) -I ./$(DIR_H) -I ./libft/includes -c -o $@ $<
-#	gcc $(FLAGS) -fsanitize=address -I ./$(DIR_H) -I ./libft/includes -c -o $@ $<
+#	gcc $(FLAGS) -I ./$(DIR_H) -I ./libft/includes -c -o $@ $<
+	gcc $(FLAGS) -fsanitize=address -I ./$(DIR_H) -I ./libft/includes -c -o $@ $<
 
 $(LIBFT) :
 	make -C ./libft/

@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   options.c                                          :+:      :+:    :+:   */
+/*   dirlst.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thberrid <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/05 11:35:38 by thberrid          #+#    #+#             */
-/*   Updated: 2020/01/05 11:35:40 by thberrid         ###   ########.fr       */
+/*   Created: 2020/01/05 16:25:38 by thberrid          #+#    #+#             */
+/*   Updated: 2020/01/05 16:25:59 by thberrid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ls.h>
 
-int		options_set(int ac, char **av, t_options *options)
+void	dirlst_print(t_dlist *lst)
 {
-	ft_bzero(options, sizeof(t_options));
-	if (ac < 2)
-		options->path = ft_strdup("./");
-	else
-		options->path = ft_strjoin(av[1], "/");
-	if (!options->path)
-		return (1);
-	return (0);
+	t_dirlst	*dirlst;
+
+	dirlst = (t_dirlst *)(lst->content);
+	ft_putstr(dirlst->dirent->d_name);
+	ft_putstr("\t\t");
+	ft_putnbr(dirlst->dirstat->st_mode);
+	ft_putchar('\n');
 }
 
-void	options_free(t_options *options)
+void	dirlist_del(t_dlist *lst)
 {
-	ft_strdel(&options->path);
+	t_dirlst *dirlst;
+
+	dirlst = (t_dirlst *)(lst->content);
+	ft_memdel((void **)&dirlst->dirstat);
+	ft_memdel((void **)&dirlst);
+	ft_memdel((void **)&lst);
 }
