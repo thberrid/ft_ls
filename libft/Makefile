@@ -33,6 +33,8 @@ SRCS = get_next_line.c \
 	   ft_ischarset.c \
 	   ft_isalpha.c \
 	   ft_isascii.c \
+	   ft_islower.c \
+	   ft_isupper.c \
 	   ft_isdigit.c \
 	   ft_isspace.c \
 	   ft_isprint.c \
