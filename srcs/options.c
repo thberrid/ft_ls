@@ -14,11 +14,16 @@
 
 int		options_set(int ac, char **av, t_options *options)
 {
+	int		retrn;
+
+	retrn = 0;
 	ft_bzero(options, sizeof(t_options));
-	if (ac < 2)
+	if (ac > 1 && av[1][0] == '-' && av[1][1] != '-')
+		retrn = flags_set(ac, av, options);
+//	if (ac < 2)
 		options->path = ft_strdup("./");
-	else
-		options->path = ft_strjoin(av[1], "/");
+//	else
+//		options->path = ft_strjoin(av[1], "/");
 	if (!options->path)
 		return (1);
 	return (0);

@@ -20,6 +20,7 @@
 # include <sys/errno.h>
 
 # define LS_ERROR_INTRO "ls"
+# define FLAGS_ALLOWD "abcdeflrRt"
 
 /*
 ** double list
@@ -81,7 +82,8 @@ typedef struct dirent	t_dirent;
 typedef struct			s_options
 {
 	char				*path;
-	unsigned int		flags;
+	unsigned int		flags_upper;
+	unsigned int		flags_lower;
 }						t_options;
 
 /*
@@ -90,6 +92,8 @@ typedef struct			s_options
 
 int						options_set(int ac, char **av, t_options *options);
 void					options_free(t_options *options);
+
+int						flags_set(int ac, char **av, t_options *options);
 
 /*
 ** directories
