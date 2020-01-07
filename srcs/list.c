@@ -24,6 +24,7 @@ t_dlist		*dlist_create(void *content, size_t size)
 		return (NULL);
 	}
 	ft_memcpy(new->content, content, size);
+	new->content_size = size;
 	return (new);
 }
 
@@ -35,7 +36,7 @@ void		dlist_init(t_dlist *lst, t_hlist *main)
 
 void		dlist_push(t_dlist *lst, t_hlist *main)
 {
-	main->len += 1;
+	main->length += 1;
 	if (!main->tail)
 		dlist_init(lst, main);
 	else
@@ -72,4 +73,19 @@ void		dlist_foreach(t_hlist *main, void (*f)(t_dlist *))
 		next = lst->next;
 		f(lst);
 	}
+}
+
+int			dlist_map(t_hlist *dest, t_hlist *src, void *options,
+			int (*f)(t_hlist*, t_dlist*, void *options))
+{
+	t_dlist	*this;
+
+	this = src->head;
+	while (this)
+	{
+		if (f(dest, this, options))
+			return (1);
+		this = this->next;
+	}
+	return (0);
 }

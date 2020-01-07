@@ -16,8 +16,7 @@ DIR_C 	= srcs
 DIR_O	= obj
 DIR_H	= includes
 NAME_C	= main.c \
-			dir.c \
-			dirlst.c \
+			dirdata.c \
 			flags.c \
 			list.c \
 			options.c \

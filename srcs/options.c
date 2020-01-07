@@ -26,14 +26,14 @@ static int		print_usage_and_quit(char invalid_char)
 static void		options_print(t_options *options)
 {
 	ft_putendl("--- debug ---");
-	ft_putendl("flags: ");
+	ft_putendl("- flags: ");
 	print_memory(&options->flags_lower, sizeof(options->flags_lower));
 	print_memory(&options->flags_upper, sizeof(options->flags_upper));
 	ft_putchar('\n');
-	ft_putstr("path len: ");
-	ft_putnbr(options->paths->len);
+	ft_putstr("- path\nlen: ");
+	ft_putnbr(options->paths->length);
 	ft_putchar('\n');
-	if (options->paths->len)
+	if (options->paths->length)
 		ft_putendl("status\tname");
 	dlist_foreach(options->paths, &path_print);
 	ft_putendl("--- debug ---");
@@ -55,7 +55,7 @@ int				options_set(int ac, char **av, t_options *options)
 	return (0);
 }
 
-void	options_del(t_dlist *lst)
+void			options_del(t_dlist *lst)
 {
 	t_path	*path;
 

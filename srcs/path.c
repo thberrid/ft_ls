@@ -12,6 +12,30 @@
 
 #include <ft_ls.h>
 
+char	*path_concat(char *path1, char *path2)
+{
+	char	*slash;
+	char	*new_path;
+	char	*buf;
+
+	if (!(slash = ft_strdup("/")))
+		return (NULL);
+	if (!(buf = ft_strjoin(path1, slash)))
+	{
+		ft_strdel(&slash);
+		return (NULL);
+	}
+	if (!(new_path = ft_strjoin(buf, path2)))
+	{
+		ft_strdel(&slash);
+		ft_strdel(&buf);
+		return (NULL);
+	}
+	ft_strdel(&buf);
+	ft_strdel(&slash);
+	return (new_path);
+}
+
 void	path_print(t_dlist *lst)
 {
 	t_path	*path;
@@ -70,7 +94,7 @@ int		path_set(int ac, char **av, t_options *options)
 			return (1);
 		i += 1;
 	}
-	if (ac < 2 && path_add("./", options))
+	if (!options->paths->length && path_add("./", options))
 		return (1);
 	return (0);
 }
