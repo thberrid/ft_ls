@@ -23,26 +23,44 @@ static int		print_usage_and_quit(char invalid_char)
 	return (1);
 }
 
+static void		options_print(t_options *options)
+{
+	ft_putendl("--- debug ---");
+	ft_putendl("flags: ");
+	print_memory(&options->flags_lower, sizeof(options->flags_lower));
+	print_memory(&options->flags_upper, sizeof(options->flags_upper));
+	ft_putchar('\n');
+	ft_putstr("path len: ");
+	ft_putnbr(options->paths->len);
+	ft_putchar('\n');
+	if (options->paths->len)
+		ft_putendl("status\tname");
+	dlist_foreach(options->paths, &path_print);
+	ft_putendl("--- debug ---");
+}
+
 int				options_set(int ac, char **av, t_options *options)
 {
-	char		retrn;
+	int			retrn;
 
 	retrn = 0;
 	ft_bzero(options, sizeof(t_options));
 	if (ac > 1 && av[1][0] == '-' && av[1][1] != '-')
-		retrn = flags_set(ac, av, options);
-//	if (ac < 2)
-		options->path = ft_strdup("./");
-//	else
-//		options->path = ft_strjoin(av[1], "/");
-	if (retrn)
-		return (print_usage_and_quit(retrn));
-	if (!options->path)
+		if ((retrn = flags_set(ac, av, options)))
+			return (print_usage_and_quit(retrn));
+	if (path_set(ac, av, options))
 		return (1);
+	if (DEBUG_MODE)
+		options_print(options);
 	return (0);
 }
 
-void	options_free(t_options *options)
+void	options_del(t_dlist *lst)
 {
-	ft_strdel(&options->path);
+	t_path	*path;
+
+	path = (t_path *)lst->content;
+	ft_strdel(&path->name);
+	ft_memdel((void **)&path);
+	ft_memdel((void **)&lst);
 }

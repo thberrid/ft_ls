@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include <ft_ls.h>
-
+/*
 static int	dirlst_set(t_dirlst *dest, t_dirent *src)
 {
 	if (!(dest->dirstat = ft_memalloc(sizeof(t_stat))))
@@ -48,3 +48,4 @@ int			dir_get(t_options *options, t_hlist *main)
 	closedir(dir_open);
 	return (0);
 }
+*/

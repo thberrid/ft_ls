@@ -20,7 +20,8 @@ NAME_C	= main.c \
 			dirlst.c \
 			flags.c \
 			list.c \
-			options.c
+			options.c \
+			path.c
 NAME_O	= $(NAME_C:.c=.o)
 NAME_H	= ft_ls.h
 FILES_C	= $(addprefix $(DIR_C)/, $(NAME_C))

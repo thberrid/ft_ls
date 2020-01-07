@@ -12,6 +12,7 @@
 
 #include <ft_ls.h>
 
+/*
 int		ls_root(t_options *options)
 {
 	t_hlist		main;
@@ -19,13 +20,13 @@ int		ls_root(t_options *options)
 
 	retrn = 0;
 	ft_bzero(&main, sizeof(t_hlist));
-	if ((retrn = dir_get(options, &main)))
-		return (1);
-	dlist_foreach(&main, &dirlst_print);
+//	if ((retrn = dir_get(options, &main)))
+//		return (1);
+//	dlist_foreach(&main, &dirlst_print);
 	dlist_foreach(&main, &dirlist_del);
 	return (0);
 }
-
+*/
 int		main(int ac, char **av)
 {
 	t_options	options;
@@ -33,8 +34,8 @@ int		main(int ac, char **av)
 
 	if ((retrn = options_set(ac, av, &options)))
 		return (0);
-	if ((retrn = ls_root(&options)))
-		ft_putendl(strerror(errno));
-	options_free(&options);
+//	if ((retrn = ls_root(&options)))
+//		ft_putendl(strerror(errno));
+	dlist_foreach(options.paths, &options_del);
 	return (0);
 }

@@ -23,7 +23,7 @@ static int	flags_add(char new, t_options *options)
 	return (0);
 }
 
-int			flags_set(int ac, char **av, t_options *options)
+char		flags_set(int ac, char **av, t_options *options)
 {
 	int		i;
 	int		j;

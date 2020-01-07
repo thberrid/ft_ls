@@ -20,7 +20,9 @@
 # include <sys/errno.h>
 
 # define LS_ERROR_INTRO "ls"
-# define FLAGS_ALLOWD "abcdeflrRt"
+# define FLAGS_ALLOWD "alrRt"
+
+# define DEBUG_MODE 1
 
 /*
 ** double list
@@ -79,27 +81,35 @@ typedef struct stat		t_stat;
 
 typedef struct dirent	t_dirent;
 
-typedef struct			s_options
-{
-	char				*path;
-	unsigned int		flags_upper;
-	unsigned int		flags_lower;
-}						t_options;
-
 /*
 ** options
 */
 
-int						options_set(int ac, char **av, t_options *options);
-void					options_free(t_options *options);
+typedef struct			s_options
+{
+	t_hlist				*paths;
+	unsigned int		flags_upper;
+	unsigned int		flags_lower;
+}						t_options;
 
-int						flags_set(int ac, char **av, t_options *options);
+typedef struct 			s_path
+{
+	int					status;
+	char				*name;		
+}						t_path;
+
+int						options_set(int ac, char **av, t_options *options);
+void					options_del(t_dlist *lst);
+
+char					flags_set(int ac, char **av, t_options *options);
+int						path_set(int ac, char **av, t_options *options);
+void					path_print(t_dlist *lst);
 
 /*
 ** directories
 */
 
-int						dir_get(t_options *options, t_hlist *main);
+//int						dir_get(t_options *options, t_hlist *main);
 
 typedef struct			s_dirlst
 {
