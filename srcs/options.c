@@ -25,18 +25,18 @@ static int		print_usage_and_quit(char invalid_char)
 
 static void		options_print(t_options *options)
 {
-	ft_putendl("--- debug ---");
+	ft_putendl(DEBUG_TAG_OPEN);
 	ft_putendl("- flags: ");
 	print_memory(&options->flags_lower, sizeof(options->flags_lower));
 	print_memory(&options->flags_upper, sizeof(options->flags_upper));
 	ft_putchar('\n');
 	ft_putstr("- path\nlen: ");
-	ft_putnbr(options->paths->length);
+	ft_putnbr(options->operands->length);
 	ft_putchar('\n');
-	if (options->paths->length)
+	if (options->operands->length)
 		ft_putendl("status\tname");
-	dlist_foreach(options->paths, &path_print);
-	ft_putendl("--- debug ---");
+	dlist_foreach(options->operands, &path_print);
+	ft_putendl(DEBUG_TAG_CLOSE);
 }
 
 int				options_set(int ac, char **av, t_options *options)

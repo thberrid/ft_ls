@@ -47,23 +47,19 @@ void	path_print(t_dlist *lst)
 	ft_putchar('\n');
 }
 
-int		status_set(char *name, t_path *path)
+void	path_nonexist_print(t_dlist *lst)
 {
-	t_stat		buf;
-
-	ft_bzero(&buf, sizeof(t_stat));
-	if ((lstat(name, &buf)) == 0)
-		path->status = 1;
-	else
-	{
-		ft_putstr("ft_ls: ");
-		ft_putstr(name);
-		ft_putendl(" No such file o directory");
-	}
-	return (0);
+	ft_putstr("ft_ls: ");
+	ft_putstr(((t_path *)lst->content)->name);
+	ft_putendl(" No such file o directory");
 }
 
-int		path_add(char *name, t_options *options)
+int		path_sort_ascii(t_dlist *l1, t_dlist *l2)
+{
+	return (ft_strcmp(((t_path *)l1->content)->name, ((t_path *)l2->content)->name));
+}
+
+int		path_add(char *name, t_hlist *operands)
 {
 	t_dlist		*lst;
 	t_path		newpath;
@@ -71,11 +67,9 @@ int		path_add(char *name, t_options *options)
 	ft_bzero(&newpath, sizeof(t_path));
 	if ((newpath.name = ft_strdup(name)) == 0)
 		return (1);
-	if (status_set(name, &newpath))
-		return (1);
 	if ((lst = dlist_create(&newpath, sizeof(t_path))) == 0)
 		return (1);
-	dlist_push(lst, options->paths);
+	dlist_insert_before(lst, dlist_search(lst, operands, &path_sort_ascii), operands);
 	return (0);
 }
 
@@ -84,17 +78,24 @@ int		path_set(int ac, char **av, t_options *options)
 	int		i;
 
 	i = 1;
-	while (i < ac && av[i][0] == '-' && av[i][1] && av[i][1] != '-')
+	while (i < ac && av[i][0] == '-' && av[i][1])
+	{
 		i += 1;
-	if (!(options->paths = ft_memalloc(sizeof(t_options))))
+		if (ft_strequ(av[i - 1], "--"))
+			break ;
+	}
+	if (!(options->operands = ft_memalloc(sizeof(t_hlist))))
+		return (1);
+	if (!(options->inval_oper = ft_memalloc(sizeof(t_hlist))))
 		return (1);
 	while (i < ac)
 	{
-		if (path_add(av[i], options))
+		if (path_add(av[i], file_exists(av[i]) ? options->operands : options->inval_oper))
 			return (1);
 		i += 1;
 	}
-	if (!options->paths->length && path_add("./", options))
+	if (!options->operands->length && path_add("./", options->operands))
 		return (1);
+	dlist_foreach(options->inval_oper, &path_nonexist_print);
 	return (0);
 }

@@ -61,6 +61,40 @@ void		dlist_unshift(t_dlist *lst, t_hlist *main)
 	}
 }
 
+void		dlist_insert_before(t_dlist *new_elemnt, t_dlist *ref, t_hlist *main)
+{
+	t_dlist *previous;
+
+	if (!ref)
+	{
+		dlist_push(new_elemnt, main);
+		return ;
+	}
+	previous = ref->prev;
+	if (previous)
+		previous->next = new_elemnt;
+	main->length += 1;
+	new_elemnt->prev = previous;
+	new_elemnt->next = ref;
+	ref->prev = new_elemnt;
+	if (main->head == ref)
+		main->head = new_elemnt;
+}
+
+t_dlist		*dlist_search(t_dlist *new_elemnt, t_hlist *main, int (*f)(t_dlist *, t_dlist *))
+{
+	t_dlist	*this;
+
+	this = main->head;
+	while (this)
+	{
+		if (f(new_elemnt, this) <= 0)
+			return (this);
+		this = this->next;
+	}
+	return (this);
+}
+
 void		dlist_foreach(t_hlist *main, void (*f)(t_dlist *))
 {
 	t_dlist		*lst;

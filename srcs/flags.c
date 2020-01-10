@@ -23,6 +23,15 @@ static int	flags_add(char new, t_options *options)
 	return (0);
 }
 
+int			flag_is_on(t_options *options, char is_upper, unsigned int flag_code)
+{
+	if (is_upper && ((options->flags_upper ^ flag_code) < options->flags_upper))
+		return (1);
+	if (!is_upper && ((options->flags_lower ^ flag_code) < options->flags_lower))
+		return (1);
+	return (0);
+}
+
 char		flags_set(int ac, char **av, t_options *options)
 {
 	int		i;

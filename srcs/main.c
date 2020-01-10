@@ -14,14 +14,14 @@
 
 int		ls_root(t_options *options, t_hlist *paths)
 {
-	t_hlist		dirs;
+	t_hlist		files;
 
-	ft_bzero(&dirs, sizeof(t_hlist));
-	if (dlist_map(&dirs, paths, options, (void *)&dirdata_set))
+	ft_bzero(&files, sizeof(t_hlist));
+	if (dlist_map(&files, paths, options, (void *)&filedata_set))
 		return (1);
-	if (dlist_map(paths, &dirs, options, (void *)&dirdata_print))
-		return (1);
-	dlist_foreach(&dirs, &dirlist_del);
+	ft_putendl("\nmode\ttype\tname\n");
+	filedata_print(&files, options);
+	dlist_foreach(&files, &filelist_del);
 	return (0);
 }
 
@@ -32,8 +32,10 @@ int		main(int ac, char **av)
 
 	if ((retrn = options_set(ac, av, &options)))
 		return (0);
-	if ((retrn = ls_root(&options, options.paths)))
+	if ((retrn = ls_root(&options, options.operands)))
 		ft_putendl(strerror(errno));
-	dlist_foreach(options.paths, &options_del);
+	dlist_foreach(options.operands, &options_del);
+	dlist_foreach(options.inval_oper, &options_del);
+	ft_memdel((void **)&options.operands);
 	return (0);
 }
