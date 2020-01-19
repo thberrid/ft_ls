@@ -6,3 +6,4 @@ ft_ls
 *.out
 .DS_Store
 .vscode
+tests

@@ -12,17 +12,37 @@
 
 #include <ft_ls.h>
 
-int		ls_root(t_options *options, t_hlist *paths)
-{
-	t_hlist		files;
+/*	moove_ptr(flag r, lst_this)
+**		if (options.r)
+**			list = list.prev
+**		else
+**			list = list.next
+**
+**	---
+**
+**	print(list, options): 
+**		foreach:
+**			if !flag(options.R) || (flag(options.R) && !dir) || !!dirent
+**				print name
+**				move_ptr(options.r, list.this)
+**		if (flag(options.R) || !this.dirent)
+**			foreach:
+**				if dir
+**					print name
+**					open, readdir, close
+**					print(this->subfiles)
+**				move_ptr(options.r, list.this)
+*/
 
-	ft_bzero(&files, sizeof(t_hlist));
-	if (dlist_map(&files, paths, options, (void *)&filedata_set))
-		return (1);
-	ft_putendl("\nmode\ttype\tname\n");
-	filedata_print(&files, options);
-	dlist_foreach(&files, &filelist_del);
-	return (0);
+int		core_loop(t_hlist *files, t_options *options)
+{
+	int		retrn;
+
+	retrn = 0;
+	dlist_filter(files, options, &filter_recursion_file, &filedata_print_this);
+	retrn = dlist_filter(files, options,
+		&filter_recursion_dir, &filedata_open_this);
+	return (retrn);
 }
 
 int		main(int ac, char **av)
@@ -32,10 +52,8 @@ int		main(int ac, char **av)
 
 	if ((retrn = options_set(ac, av, &options)))
 		return (0);
-	if ((retrn = ls_root(&options, options.operands)))
+	if (core_loop(options.operands, &options))
 		ft_putendl(strerror(errno));
-	dlist_foreach(options.operands, &options_del);
-	dlist_foreach(options.inval_oper, &options_del);
-	ft_memdel((void **)&options.operands);
+	options_del(&options);
 	return (0);
 }

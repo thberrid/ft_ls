@@ -109,6 +109,40 @@ void		dlist_foreach(t_hlist *main, void (*f)(t_dlist *))
 	}
 }
 
+t_dlist		*dlist_next_or_prev(t_dlist *file, t_options *options)
+{
+	if (flag_is_on(options->flags_upper, FLAG_R))
+		return (file->prev);
+	return (file->next);
+}
+
+t_dlist		*dlist_head_or_tail(t_hlist *files, t_options *options)
+{
+	t_dlist		*file;
+
+	file = files->head;
+	if (flag_is_on(options->flags_upper, FLAG_R))
+		file = files->tail;
+	return (file);
+}
+
+int			dlist_filter(t_hlist *files, t_options *options, 
+				int (*cond)(t_dlist *, t_options *),
+				int (*f)(t_dlist *, t_options *))
+{
+	t_dlist		*file;
+
+	file = dlist_head_or_tail(files, options);
+	while (file)
+	{
+		if (cond(file, options))
+			if (f(file, options))
+				return (1);
+		file = dlist_next_or_prev(file, options);
+	}
+	return (0);
+}
+
 int			dlist_map(t_hlist *dest, t_hlist *src, void *options,
 			int (*f)(t_hlist*, t_dlist*, void *options))
 {

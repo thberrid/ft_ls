@@ -6,7 +6,7 @@
 #    By: thberrid <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/07/29 19:26:47 by thberrid          #+#    #+#              #
-#    Updated: 2020/01/05 11:05:52 by thberrid         ###   ########.fr        #
+#    Updated: 2020/01/10 05:17:04 by thberrid         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,11 @@ DIR_C 	= srcs
 DIR_O	= obj
 DIR_H	= includes
 NAME_C	= main.c \
-			dirdata.c \
+			filedata.c \
+			filters.c \
 			flags.c \
 			list.c \
+			msg.c \
 			options.c \
 			path.c
 NAME_O	= $(NAME_C:.c=.o)

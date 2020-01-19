@@ -19,38 +19,27 @@
 # include <sys/stat.h>
 # include <sys/errno.h>
 
-# define FLAGS_ALLOWD "alrtR"
-
-# define DEBUG_MODE 1
-
 /*
-** double list
+** a: show hidden files .*
+** l: long and boring format
+** r: reverse sort
+** t: sort by time modified (recent first) then lexicohraphic
+** R: Recursive
 */
 
-typedef struct			s_hlist
-{
-	struct s_dlist	*head;
-	struct s_dlist	*tail;
-	size_t			length;
-	void			*content;
-	size_t			content_size;
-}						t_hlist;
+# define FLAGS_ALLOWD "alrtR"
+# define FLAG_LOWER 0
+# define FLAG_UPPER 1
+# define FLAG_A		0
+# define FLAG_L		11
+# define FLAG_R		17
+# define FLAG_T		19
 
-typedef struct			s_dlist
-{
-	struct s_dlist	*prev;
-	struct s_dlist	*next;
-	void			*content;
-	size_t			content_size;
-}						t_dlist;
-
-t_dlist					*dlist_create(void *content, size_t size);
-void					dlist_init(t_dlist *lst, t_hlist *main);
-void					dlist_push(t_dlist *lst, t_hlist *main);
-void					dlist_unshift(t_dlist *lst, t_hlist *main);
-void					dlist_foreach(t_hlist *main, void (*f)(t_dlist *));
-int						dlist_map(t_hlist *dest, t_hlist *src, void *options,
-							int (*f)(t_hlist*, t_dlist*, void *options));
+# define DEBUG_MODE 1
+# define DEBUG_TAG_OPEN "\e[94m--- debug ---"
+# define DEBUG_TAG_CLOSE "--- debug ---\e[0m"
+# define DEBUG_HEAD_OPEN "\e[90m"
+# define DEBUG_HEAD_CLOSE "\e[0m"
 
 /*
 ** struct stat {
@@ -74,61 +63,124 @@ typedef struct stat		t_stat;
 
 /*
 ** struct dirent {
-**    ino_t          d_ino;       inode number
-**    off_t          d_off;       offset to the next dirent
-**    unsigned short d_reclen;    length of this record
-**    unsigned char  d_type;      type of file; not supported
-**                                   by all file system types
-**    char           d_name[256]; filename
+**    ino_t          d_ino;       		inode number
+**    off_t          d_off;       		offset to the next dirent
+**    unsigned short d_reclen;    		length of this record
+**    unsigned char  d_type;      		type of file; not supported
+**                                   		by all file system types
+**    char           d_name[255 + 1];	filename
 ** };
 */
 
 typedef struct dirent	t_dirent;
 
-/*
-** options
-*/
+typedef struct			s_hlist
+{
+	struct s_dlist	*head;
+	struct s_dlist	*tail;
+	size_t			length;
+	void			*content;
+	size_t			content_size;
+}						t_hlist;
+
+typedef struct			s_dlist
+{
+	struct s_dlist	*prev;
+	struct s_dlist	*next;
+	void			*content;
+	t_hlist			*subfiles;
+	size_t			content_size;
+}						t_dlist;
+
+typedef struct			s_filedata
+{
+	t_dirent	*dirent;
+	t_stat		*stat;
+	char		*path;
+	DIR			*dir;
+}						t_filedata;
 
 typedef struct			s_options
 {
-	t_hlist			*paths;
+	t_hlist			*operands;
+	t_hlist			*operands_invalid;
 	unsigned int	flags_upper;
 	unsigned int	flags_lower;
 }						t_options;
 
-typedef struct			s_path
-{
-	int				status;
-	char			*name;
-}						t_path;
+int						core_loop(t_hlist *files, t_options *options);
+
+/*
+** generic list functions
+*/
+
+t_dlist					*dlist_create(void *content, size_t size);
+void					dlist_init(t_dlist *lst, t_hlist *main);
+void					dlist_push(t_dlist *lst, t_hlist *main);
+void					dlist_unshift(t_dlist *lst, t_hlist *main);
+void					dlist_foreach(t_hlist *main, void (*f)(t_dlist *));
+
+t_dlist					*dlist_head_or_tail(t_hlist *files, t_options *options);
+t_dlist					*dlist_next_or_prev(t_dlist *file, t_options *options);
+int						dlist_filter(t_hlist *files, t_options *options,
+							int (*cond)(t_dlist *, t_options *), 
+							int (*f)(t_dlist *, t_options *));
+int						dlist_map(t_hlist *dest, t_hlist *src, void *options,
+							int (*f)(t_hlist*, t_dlist*, void *options));
+void					dlist_insert_before(t_dlist *new_elemnt, t_dlist *ref,
+							t_hlist *operands);
+t_dlist					*dlist_search(t_dlist *new_elemnt, t_hlist *main,
+							int (*f)(t_dlist *, t_dlist *));
+
+/*
+** options settings
+*/
 
 int						options_set(int ac, char **av, t_options *options);
-void					options_del(t_dlist *lst);
+void					options_del(t_options *options);
+int						operands_set(int ac, char **av, t_options *options);
 
 char					flags_set(int ac, char **av, t_options *options);
+int						flag_is_on(unsigned int flags_available, unsigned int flag_code);
 
-int						path_set(int ac, char **av, t_options *options);
+/*
+** filtering condition options
+*/
+
+int						file_isdir(t_stat *filestat);
+int						file_exists(char *name);
+int						filter_ishidden(t_dlist *lst, t_options *options);
+int						filter_recursion_file(t_dlist *file, t_options *options);
+int						filter_recursion_dir(t_dlist *file, t_options *options);
+int						filter_ishidden(t_dlist *lst, t_options *options);
+
+/*
+** 
+*/
+
+int						path_add(char *name, t_hlist *operands);
 void					path_print(t_dlist *lst);
 char					*path_concat(char *path1, char *path2);
 
 /*
-** directories
+** file, directories
 */
 
-typedef struct			s_dirdata
-{
-	t_dirent	*dirent;
-	t_stat		*dirstat;
-	t_path		*path;
-	DIR			*dir_content;
-}						t_dirdata;
+void					filedata_del_this(t_dlist *lst);
 
-int						dirdata_set(t_hlist *dest, t_dlist *lst,
-							t_options *options);
-int						dirdata_print(t_hlist *dest, t_dlist *lst,
-							t_options *options);
-void					dirlist_del(t_dlist *lst);
+int						filedata_print_this(t_dlist *this, t_options *options);
+int						filedata_open_this(t_dlist *this, t_options *options);
+int						filedata_readdir(DIR *dir_open, t_hlist *dest, t_dlist *root_file, t_options *options);
+int						filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path);
 
-int						ls_root(t_options *options, t_hlist *paths);
+int						path_sort_ascii(t_dlist *l1, t_dlist *l2);
+
+/*
+** messages, errors
+*/
+
+void					file_openfail_print(t_filedata *filedata);
+void					file_unexistent_print(t_dlist *lst);
+int						print_usage_and_quit(char invalid_char);
 
 #endif

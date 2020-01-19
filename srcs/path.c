@@ -38,64 +38,30 @@ char	*path_concat(char *path1, char *path2)
 
 void	path_print(t_dlist *lst)
 {
-	t_path	*path;
+	t_filedata	*file;
 
-	path = (t_path *)lst->content;
-	ft_putnbr(path->status);
-	ft_putchar('\t');
-	ft_putstr(path->name);
+	file = (t_filedata *)lst->content;
+	ft_putstr(file->path);
 	ft_putchar('\n');
-}
-
-void	path_nonexist_print(t_dlist *lst)
-{
-	ft_putstr("ft_ls: ");
-	ft_putstr(((t_path *)lst->content)->name);
-	ft_putendl(" No such file o directory");
 }
 
 int		path_sort_ascii(t_dlist *l1, t_dlist *l2)
 {
-	return (ft_strcmp(((t_path *)l1->content)->name, ((t_path *)l2->content)->name));
+	return (ft_strcmp(((t_filedata *)l1->content)->path, ((t_filedata *)l2->content)->path));
 }
 
 int		path_add(char *name, t_hlist *operands)
 {
-	t_dlist		*lst;
-	t_path		newpath;
+	t_dlist		*newlst;
+	t_filedata	newfile;
 
-	ft_bzero(&newpath, sizeof(t_path));
-	if ((newpath.name = ft_strdup(name)) == 0)
+	ft_bzero(&newfile, sizeof(t_filedata));
+	if ((newfile.path = ft_strdup(name)) == 0)
+		return (-1);
+	if (filedata_set_stat(&newfile, NULL, NULL))
 		return (1);
-	if ((lst = dlist_create(&newpath, sizeof(t_path))) == 0)
-		return (1);
-	dlist_insert_before(lst, dlist_search(lst, operands, &path_sort_ascii), operands);
-	return (0);
-}
-
-int		path_set(int ac, char **av, t_options *options)
-{
-	int		i;
-
-	i = 1;
-	while (i < ac && av[i][0] == '-' && av[i][1])
-	{
-		i += 1;
-		if (ft_strequ(av[i - 1], "--"))
-			break ;
-	}
-	if (!(options->operands = ft_memalloc(sizeof(t_hlist))))
-		return (1);
-	if (!(options->inval_oper = ft_memalloc(sizeof(t_hlist))))
-		return (1);
-	while (i < ac)
-	{
-		if (path_add(av[i], file_exists(av[i]) ? options->operands : options->inval_oper))
-			return (1);
-		i += 1;
-	}
-	if (!options->operands->length && path_add("./", options->operands))
-		return (1);
-	dlist_foreach(options->inval_oper, &path_nonexist_print);
+	if ((newlst = dlist_create(&newfile, sizeof(t_filedata))) == 0)
+		return (-1);
+	dlist_insert_before(newlst, dlist_search(newlst, operands, &path_sort_ascii), operands);
 	return (0);
 }

@@ -12,31 +12,49 @@
 
 #include <ft_ls.h>
 
-static int		print_usage_and_quit(char invalid_char)
+int				operands_set(int ac, char **av, t_options *options)
 {
-	ft_putstr("ft_ls: illegal option -- ");
-	ft_putchar(invalid_char);
-	ft_putchar('\n');
-	ft_putstr("usage: ./ft_ls [-");
-	ft_putstr(FLAGS_ALLOWD);
-	ft_putendl("] [file ...]");
-	return (1);
+	int		i;
+
+	i = 1;
+	while (i < ac && av[i][0] == '-' && av[i][1])
+	{
+		i += 1;
+		if (ft_strequ(av[i - 1], "--"))
+			break ;
+	}
+	if (!(options->operands = ft_memalloc(sizeof(t_hlist))))
+		return (1);
+	if (!(options->operands_invalid = ft_memalloc(sizeof(t_hlist))))
+		return (1);
+	while (i < ac)
+	{
+		if (path_add(av[i], file_exists(av[i]) ? options->operands : options->operands_invalid) == -1)
+			return (1);
+		i += 1;
+	}
+	if (!options->operands->length && !options->operands_invalid->length && path_add(".", options->operands))
+		return (1);
+	dlist_foreach(options->operands_invalid, &file_unexistent_print);
+	return (0);
 }
 
 static void		options_print(t_options *options)
 {
+	ft_putstr("\n");
 	ft_putendl(DEBUG_TAG_OPEN);
-	ft_putendl("- flags: ");
+	ft_putendl("\n- flags: ");
 	print_memory(&options->flags_lower, sizeof(options->flags_lower));
 	print_memory(&options->flags_upper, sizeof(options->flags_upper));
 	ft_putchar('\n');
-	ft_putstr("- path\nlen: ");
+	ft_putstr("- paths:\nlen: ");
 	ft_putnbr(options->operands->length);
-	ft_putchar('\n');
-	if (options->operands->length)
-		ft_putendl("status\tname");
+	ft_putstr("\n");
 	dlist_foreach(options->operands, &path_print);
+	ft_putstr("\n");
 	ft_putendl(DEBUG_TAG_CLOSE);
+	ft_putstr("\n");
+	ft_putendl("\e[90ms.st_mode\td.d_type\tpath\n\e[0m");
 }
 
 int				options_set(int ac, char **av, t_options *options)
@@ -48,19 +66,17 @@ int				options_set(int ac, char **av, t_options *options)
 	if (ac > 1 && av[1][0] == '-' && av[1][1] != '-')
 		if ((retrn = flags_set(ac, av, options)))
 			return (print_usage_and_quit(retrn));
-	if (path_set(ac, av, options))
+	if (operands_set(ac, av, options))
 		return (1);
 	if (DEBUG_MODE)
 		options_print(options);
 	return (0);
 }
 
-void			options_del(t_dlist *lst)
+void		options_del(t_options *options)
 {
-	t_path	*path;
-
-	path = (t_path *)lst->content;
-	ft_strdel(&path->name);
-	ft_memdel((void **)&path);
-	ft_memdel((void **)&lst);
+	dlist_foreach(options->operands, &filedata_del_this);
+	dlist_foreach(options->operands_invalid, &filedata_del_this);
+	ft_memdel((void **)&options->operands);
+	ft_memdel((void **)&options->operands_invalid);
 }
