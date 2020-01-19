@@ -55,5 +55,6 @@ int		main(int ac, char **av)
 	if (core_loop(options.operands, &options))
 		ft_putendl(strerror(errno));
 	options_del(&options);
+	system("leaks ft_ls");
 	return (0);
 }

@@ -28,18 +28,16 @@
 */
 
 # define FLAGS_ALLOWD "alrtR"
-# define FLAG_LOWER 0
-# define FLAG_UPPER 1
 # define FLAG_A		0
 # define FLAG_L		11
 # define FLAG_R		17
 # define FLAG_T		19
 
 # define DEBUG_MODE 1
-# define DEBUG_TAG_OPEN "\e[94m--- debug ---"
-# define DEBUG_TAG_CLOSE "--- debug ---\e[0m"
-# define DEBUG_HEAD_OPEN "\e[90m"
-# define DEBUG_HEAD_CLOSE "\e[0m"
+# define DEBUG_BLUE "\e[94m"
+# define DEBUG_GREY "\e[90m"
+# define DEBUG_CLEAR "\e[0m"
+# define DEBUG_TAG "\n--- debug ---\n\n"
 
 /*
 ** struct stat {
@@ -147,19 +145,21 @@ int						flag_is_on(unsigned int flags_available, unsigned int flag_code);
 ** filtering condition options
 */
 
-int						file_isdir(t_stat *filestat);
+int						file_is_dir(t_stat *filestat);
+int						file_is_fist_elemnt(t_dlist *elemnt, t_options *options);
+int						file_is_last_elemnt(t_dlist *elemnt, t_options *options);
+int						file_is_hidden(t_dlist *file);
 int						file_exists(char *name);
-int						filter_ishidden(t_dlist *lst, t_options *options);
 int						filter_recursion_file(t_dlist *file, t_options *options);
 int						filter_recursion_dir(t_dlist *file, t_options *options);
-int						filter_ishidden(t_dlist *lst, t_options *options);
 
 /*
-** 
+** path management functions
 */
 
 int						path_add(char *name, t_hlist *operands);
 void					path_print(t_dlist *lst);
+void					pathroot_print(t_dlist *this);
 char					*path_concat(char *path1, char *path2);
 
 /*
@@ -181,6 +181,6 @@ int						path_sort_ascii(t_dlist *l1, t_dlist *l2);
 
 void					file_openfail_print(t_filedata *filedata);
 void					file_unexistent_print(t_dlist *lst);
-int						print_usage_and_quit(char invalid_char);
+void					print_usage_and_quit(char invalid_char);
 
 #endif

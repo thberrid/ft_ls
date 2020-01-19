@@ -45,6 +45,22 @@ void	path_print(t_dlist *lst)
 	ft_putchar('\n');
 }
 
+void	pathroot_print(t_dlist *this)
+{
+	char	*last_slash;
+	char	*pathroot;
+	size_t	len;
+
+	pathroot = ((t_filedata *)this->content)->path;
+	last_slash = ft_strrchr(pathroot, '/');
+	if (last_slash)
+		len = last_slash - pathroot;
+	else
+		len = ft_strlen(pathroot);	
+	ft_putnstr(pathroot, len);
+	ft_putendl(":");
+}
+
 int		path_sort_ascii(t_dlist *l1, t_dlist *l2)
 {
 	return (ft_strcmp(((t_filedata *)l1->content)->path, ((t_filedata *)l2->content)->path));

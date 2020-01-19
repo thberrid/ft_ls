@@ -73,6 +73,8 @@ SRCS = get_next_line.c \
 	   ft_putnbr_fd.c \
 	   ft_putstr.c \
 	   ft_putstr_fd.c \
+	   ft_putnstr.c \
+	   ft_putnstr_fd.c \
 	   ft_strcat.c \
 	   ft_strchr.c \
 	   ft_strclr.c \

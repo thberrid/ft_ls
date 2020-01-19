@@ -31,6 +31,7 @@ int			filedata_open_this(t_dlist *this, t_options *options)
 	int			retrn;
 	DIR			*dir_open;
 	t_filedata	*root_data;
+	t_dlist		*title;
 
 	root_data = ((t_filedata *)this->content);
 	if (!(dir_open = opendir(root_data->path)))
@@ -41,7 +42,11 @@ int			filedata_open_this(t_dlist *this, t_options *options)
 	ft_bzero(&files, sizeof(t_hlist));
 	if ((filedata_readdir(dir_open, &files, this, options)))
 		return (1);
+	title = dlist_head_or_tail(&files, options);
+	if (file_is_fist_elemnt(title, options))
+		pathroot_print(title);
 	closedir(dir_open);
+	// if one day u want to sort, thats sould be somewhere here approximatively
 	retrn = core_loop(&files, options);
 	dlist_foreach(&files, &filedata_del_this);
 	return (retrn);
@@ -52,7 +57,7 @@ int			filedata_print_this(t_dlist *this, t_options *options)
 	t_filedata	*filedata;
 
 	(void)options;
-	filedata = (t_filedata *)(this->content);
+	filedata = (t_filedata *)(this->content);	
 	ft_putnbr(filedata->stat->st_mode);
 	ft_putstr("\t\t");
 	if (filedata->dirent)
@@ -60,8 +65,13 @@ int			filedata_print_this(t_dlist *this, t_options *options)
 	else
 		ft_putstr("no dirent");
 	ft_putstr("\t\t");
-	ft_putstr(filedata->path);
+	if (filedata->dirent)
+		ft_putstr(filedata->dirent->d_name);
+	else
+		ft_putstr(filedata->path);
 	ft_putstr("\n");
+	if (file_is_last_elemnt(this, options))
+		ft_putchar('\n');
 	return (0);
 }
 

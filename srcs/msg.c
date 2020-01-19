@@ -14,26 +14,34 @@
 
 void	file_openfail_print(t_filedata *filedata)
 {
-	ft_putstr("ft_ls: ");
-	ft_putstr(filedata->path);
-	ft_putstr(": ");
-	ft_putendl(strerror(errno));
+	char	*filename;
+
+	ft_putendl_fd(filedata->path, 2);
+	ft_putstr_fd("ft_ls: ", 2);
+	filename = ft_strrchr(filedata->path, '/');
+	if (filename)
+		filename += 1;
+	else
+		filename = filedata->path;
+	ft_putstr_fd(filename, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(strerror(errno), 2);
+	ft_putchar_fd('\n', 2);
 }
 
 void	file_unexistent_print(t_dlist *lst)
 {
-	ft_putstr("ft_ls: ");
-	ft_putstr(((t_filedata *)lst->content)->path);
-	ft_putendl(": No such file or directory");
+	ft_putstr_fd("ft_ls: ", 2);
+	ft_putstr_fd(((t_filedata *)lst->content)->path, 2);
+	ft_putendl_fd(": No such file or directory", 2);
 }
 
-int		print_usage_and_quit(char invalid_char)
+void	print_usage_and_quit(char invalid_char)
 {
-	ft_putstr("ft_ls: illegal option -- ");
-	ft_putchar(invalid_char);
-	ft_putchar('\n');
-	ft_putstr("usage: ./ft_ls [-");
-	ft_putstr(FLAGS_ALLOWD);
-	ft_putendl("] [file ...]");
-	return (1);
+	ft_putstr_fd("ft_ls: illegal option -- ", 2);
+	ft_putchar_fd(invalid_char, 2);
+	ft_putchar_fd('\n', 2);
+	ft_putstr_fd("usage: ./ft_ls [-", 2);
+	ft_putstr_fd(FLAGS_ALLOWD, 2);
+	ft_putendl_fd("] [file ...]", 2);
 }

@@ -41,9 +41,9 @@ int				operands_set(int ac, char **av, t_options *options)
 
 static void		options_print(t_options *options)
 {
-	ft_putstr("\n");
-	ft_putendl(DEBUG_TAG_OPEN);
-	ft_putendl("\n- flags: ");
+	ft_putstr(DEBUG_BLUE);
+	ft_putstr(DEBUG_TAG);
+	ft_putendl("- flags: ");
 	print_memory(&options->flags_lower, sizeof(options->flags_lower));
 	print_memory(&options->flags_upper, sizeof(options->flags_upper));
 	ft_putchar('\n');
@@ -51,10 +51,10 @@ static void		options_print(t_options *options)
 	ft_putnbr(options->operands->length);
 	ft_putstr("\n");
 	dlist_foreach(options->operands, &path_print);
-	ft_putstr("\n");
-	ft_putendl(DEBUG_TAG_CLOSE);
-	ft_putstr("\n");
-	ft_putendl("\e[90ms.st_mode\td.d_type\tpath\n\e[0m");
+	ft_putstr(DEBUG_TAG);
+	ft_putstr(DEBUG_GREY);
+	ft_putstr("s.st_mode\td.d_type\tpath\n\n");
+	ft_putstr(DEBUG_CLEAR);
 }
 
 int				options_set(int ac, char **av, t_options *options)
@@ -64,8 +64,13 @@ int				options_set(int ac, char **av, t_options *options)
 	retrn = 0;
 	ft_bzero(options, sizeof(t_options));
 	if (ac > 1 && av[1][0] == '-' && av[1][1] != '-')
+	{
 		if ((retrn = flags_set(ac, av, options)))
-			return (print_usage_and_quit(retrn));
+		{
+			print_usage_and_quit(retrn);
+			return (1);
+		}
+	}
 	if (operands_set(ac, av, options))
 		return (1);
 	if (DEBUG_MODE)

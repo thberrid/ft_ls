@@ -111,7 +111,7 @@ void		dlist_foreach(t_hlist *main, void (*f)(t_dlist *))
 
 t_dlist		*dlist_next_or_prev(t_dlist *file, t_options *options)
 {
-	if (flag_is_on(options->flags_upper, FLAG_R))
+	if (flag_is_on(options->flags_lower, FLAG_R))
 		return (file->prev);
 	return (file->next);
 }
@@ -121,7 +121,7 @@ t_dlist		*dlist_head_or_tail(t_hlist *files, t_options *options)
 	t_dlist		*file;
 
 	file = files->head;
-	if (flag_is_on(options->flags_upper, FLAG_R))
+	if (flag_is_on(options->flags_lower, FLAG_R))
 		file = files->tail;
 	return (file);
 }
