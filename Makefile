@@ -16,6 +16,7 @@ DIR_C 	= srcs
 DIR_O	= obj
 DIR_H	= includes
 NAME_C	= main.c \
+			format_long.c \
 			filedata.c \
 			filters.c \
 			flags.c \
@@ -35,13 +36,13 @@ FLAGS	= -Wall -Wextra -Werror -g3
 
 all : $(NAME)
 
-$(NAME) : $(FILES_O) $(FILES_H) $(LIBFT) $(MLX)
-	gcc -I ./$(DIR_H) -I ./libft/includes -L ./libft/ -lft -o $(NAME) $(FILES_O)
+$(NAME) : $(FILES_O) $(FILES_H) $(LIBFT)
+	$(CC) -I ./$(DIR_H) -I ./libft/includes/ $(FILES_O) -L ./libft/ -lft -o $(NAME)
 #	gcc -fsanitize=address -I ./$(DIR_H) -I ./libft/includes -L ./libft/ -lft -o $(NAME) $(FILES_O)
  
 $(DIR_O)/%.o : $(DIR_C)/%.c $(FILES_H)
 	@ mkdir -p $(DIR_O)
-	gcc $(FLAGS) -I ./$(DIR_H) -I ./libft/includes -c -o $@ $<
+	gcc -I ./$(DIR_H) -I ./libft/includes/ $(FLAGS) -c -o $@ $<
 #	gcc $(FLAGS) -fsanitize=address -I ./$(DIR_H) -I ./libft/includes -c -o $@ $<
 
 $(LIBFT) :

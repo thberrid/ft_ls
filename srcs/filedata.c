@@ -67,26 +67,27 @@ int			filedata_open_this(t_dlist *this, t_options *options)
 	return (retrn);
 }
 
-int			filedata_print_this(t_dlist *this, t_options *options)
+void		file_print_name(t_dlist *elemnt, t_options *options)
 {
 	t_filedata	*filedata;
 
-	(void)options;
-	filedata = (t_filedata *)(this->content);	
-	ft_putnbr(filedata->stat->st_mode);
-	ft_putstr("\t\t");
-	if (filedata->dirent)
-		ft_putnbr(filedata->dirent->d_type);
-	else
-		ft_putstr("no dirent");
-	ft_putstr("\t\t");
+	filedata = (t_filedata *)(elemnt->content);	
 	if (filedata->dirent)
 		ft_putstr(filedata->dirent->d_name);
 	else
 		ft_putstr(filedata->path);
-	ft_putstr("\n");
-	if (file_is_last_elemnt(this, options))
+	if (file_is_last_elemnt(elemnt, options))
 		ft_putchar('\n');
+	else
+		ft_putchar(' ');
+}
+
+int			filedata_print_this(t_dlist *this, t_options *options)
+{
+	if (flag_is_on(options->flags_lower, FLAG_L))
+		format_long_print(this, options);
+	else
+		file_print_name(this, options);
 	return (0);
 }
 

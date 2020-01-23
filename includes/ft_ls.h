@@ -25,6 +25,22 @@
 ** r: reverse sort
 ** t: sort by time modified (recent first) then lexicohraphic
 ** R: Recursive
+**
+**	long format:
+**		file type, permissions 
+**			{-...}1{-rwx}3
+**				...
+**				- regular file
+**				c character special
+**				d directory
+**				l symbolic link
+**				? other file type
+**		nbr of links
+** 		owner name
+**		group name
+**		file size
+**		time last modif
+**		file name
 */
 
 # define FLAGS_ALLOWD "alrtR"
@@ -196,7 +212,9 @@ size_t					filedata_get_total(t_dlist *this);
 
 void					file_openfail_print(t_filedata *filedata);
 void					file_unexistent_print(t_dlist *lst);
+void					file_print_name(t_dlist *elemnt, t_options *options);
 void					print_usage_and_quit(char invalid_char);
 void					total_print(t_hlist *handler, t_options *options);
+void					format_long_print(t_dlist *elemnt, t_options *options);
 
 #endif

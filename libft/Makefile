@@ -122,7 +122,7 @@ $(NAME): $(OBJS)
 	ranlib $@
 
 $(OBJDIR)/%.o: %.c $(FILES_H) | $(OBJDIR)
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
 
 $(OBJDIR):
 	mkdir $@

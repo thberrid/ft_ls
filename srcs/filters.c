@@ -96,13 +96,13 @@ int		file_is_dotlink(t_dlist *file)
 
 int		filter_recursion_file(t_hlist *handler, t_dlist *file, t_options *options)
 {
-	t_filedata	*filedata;
+//	t_filedata	*filedata;
 
 	(void)handler;
 	if (!flag_is_on(options->flags_lower, FLAG_A))
 		if (file_is_hidden(file))
 			return (0);
-	filedata = (t_filedata *)file->content;
+//	filedata = (t_filedata *)file->content;
 	return (1);
 }
 
