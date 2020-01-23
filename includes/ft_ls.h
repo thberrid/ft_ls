@@ -33,7 +33,8 @@
 # define FLAG_R		17
 # define FLAG_T		19
 
-# define DEBUG_MODE 1
+# define DEBUG_MODE 0
+# define LEAKS_MODE 0
 # define DEBUG_BLUE "\e[94m"
 # define DEBUG_GREY "\e[90m"
 # define DEBUG_CLEAR "\e[0m"
@@ -81,6 +82,11 @@ typedef struct			s_hlist
 	size_t			content_size;
 }						t_hlist;
 
+typedef struct			s_hcontent
+{
+	size_t			total;
+}						t_hcontent;
+
 typedef struct			s_dlist
 {
 	struct s_dlist	*prev;
@@ -121,7 +127,7 @@ void					dlist_foreach(t_hlist *main, void (*f)(t_dlist *));
 t_dlist					*dlist_head_or_tail(t_hlist *files, t_options *options);
 t_dlist					*dlist_next_or_prev(t_dlist *file, t_options *options);
 int						dlist_filter(t_hlist *files, t_options *options,
-							int (*cond)(t_dlist *, t_options *), 
+							int (*cond)(t_hlist *handler, t_dlist *, t_options *), 
 							int (*f)(t_dlist *, t_options *));
 int						dlist_map(t_hlist *dest, t_hlist *src, void *options,
 							int (*f)(t_hlist*, t_dlist*, void *options));
@@ -129,6 +135,13 @@ void					dlist_insert_before(t_dlist *new_elemnt, t_dlist *ref,
 							t_hlist *operands);
 t_dlist					*dlist_search(t_dlist *new_elemnt, t_hlist *main,
 							int (*f)(t_dlist *, t_dlist *));
+
+/*
+** handlers management functions
+*/
+
+t_hlist					*handler_create(t_hlist **handler);
+void					handler_update(t_hlist *handler, t_dlist *new_elemnt);
 
 /*
 ** options settings
@@ -146,12 +159,13 @@ int						flag_is_on(unsigned int flags_available, unsigned int flag_code);
 */
 
 int						file_is_dir(t_stat *filestat);
-int						file_is_fist_elemnt(t_dlist *elemnt, t_options *options);
+int						file_is_first_elemnt(t_dlist *elemnt, t_options *options);
 int						file_is_last_elemnt(t_dlist *elemnt, t_options *options);
 int						file_is_hidden(t_dlist *file);
 int						file_exists(char *name);
-int						filter_recursion_file(t_dlist *file, t_options *options);
-int						filter_recursion_dir(t_dlist *file, t_options *options);
+int						file_is_single(t_dlist *elemnt);
+int						filter_recursion_file(t_hlist *handler, t_dlist *file, t_options *options);
+int						filter_recursion_dir(t_hlist *handler, t_dlist *file, t_options *options);
 
 /*
 ** path management functions
@@ -161,6 +175,7 @@ int						path_add(char *name, t_hlist *operands);
 void					path_print(t_dlist *lst);
 void					pathroot_print(t_dlist *this);
 char					*path_concat(char *path1, char *path2);
+int						path_sort_ascii(t_dlist *l1, t_dlist *l2);
 
 /*
 ** file, directories
@@ -173,7 +188,7 @@ int						filedata_open_this(t_dlist *this, t_options *options);
 int						filedata_readdir(DIR *dir_open, t_hlist *dest, t_dlist *root_file, t_options *options);
 int						filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path);
 
-int						path_sort_ascii(t_dlist *l1, t_dlist *l2);
+size_t					filedata_get_total(t_dlist *this);
 
 /*
 ** messages, errors
@@ -182,5 +197,6 @@ int						path_sort_ascii(t_dlist *l1, t_dlist *l2);
 void					file_openfail_print(t_filedata *filedata);
 void					file_unexistent_print(t_dlist *lst);
 void					print_usage_and_quit(char invalid_char);
+void					total_print(t_hlist *handler, t_options *options);
 
 #endif

@@ -23,9 +23,9 @@ int				operands_set(int ac, char **av, t_options *options)
 		if (ft_strequ(av[i - 1], "--"))
 			break ;
 	}
-	if (!(options->operands = ft_memalloc(sizeof(t_hlist))))
+	if (!handler_create(&options->operands))
 		return (1);
-	if (!(options->operands_invalid = ft_memalloc(sizeof(t_hlist))))
+	if (!handler_create(&options->operands_invalid))
 		return (1);
 	while (i < ac)
 	{
@@ -82,6 +82,8 @@ void		options_del(t_options *options)
 {
 	dlist_foreach(options->operands, &filedata_del_this);
 	dlist_foreach(options->operands_invalid, &filedata_del_this);
+	ft_memdel((void **)&options->operands->content);
 	ft_memdel((void **)&options->operands);
+	ft_memdel((void **)&options->operands_invalid->content);
 	ft_memdel((void **)&options->operands_invalid);
 }

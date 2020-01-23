@@ -34,17 +34,17 @@ void		dlist_init(t_dlist *lst, t_hlist *main)
 	main->tail = lst;
 }
 
-void		dlist_push(t_dlist *lst, t_hlist *main)
+void		dlist_push(t_dlist *new_elemnt, t_hlist *handler)
 {
-	main->length += 1;
-	if (!main->tail)
-		dlist_init(lst, main);
+	handler_update(handler, new_elemnt);
+	if (!handler->tail)
+		dlist_init(new_elemnt, handler);
 	else
 	{
-		lst->next = NULL;
-		lst->prev = main->tail;
-		main->tail->next = lst;
-		main->tail = lst;
+		new_elemnt->next = NULL;
+		new_elemnt->prev = handler->tail;
+		handler->tail->next = new_elemnt;
+		handler->tail = new_elemnt;
 	}
 }
 
@@ -61,24 +61,24 @@ void		dlist_unshift(t_dlist *lst, t_hlist *main)
 	}
 }
 
-void		dlist_insert_before(t_dlist *new_elemnt, t_dlist *ref, t_hlist *main)
+void		dlist_insert_before(t_dlist *new_elemnt, t_dlist *ref, t_hlist *handler)
 {
 	t_dlist *previous;
 
 	if (!ref)
 	{
-		dlist_push(new_elemnt, main);
+		dlist_push(new_elemnt, handler);
 		return ;
 	}
 	previous = ref->prev;
 	if (previous)
 		previous->next = new_elemnt;
-	main->length += 1;
+	handler_update(handler, new_elemnt);
 	new_elemnt->prev = previous;
 	new_elemnt->next = ref;
 	ref->prev = new_elemnt;
-	if (main->head == ref)
-		main->head = new_elemnt;
+	if (handler->head == ref)
+		handler->head = new_elemnt;
 }
 
 t_dlist		*dlist_search(t_dlist *new_elemnt, t_hlist *main, int (*f)(t_dlist *, t_dlist *))
@@ -126,16 +126,16 @@ t_dlist		*dlist_head_or_tail(t_hlist *files, t_options *options)
 	return (file);
 }
 
-int			dlist_filter(t_hlist *files, t_options *options, 
-				int (*cond)(t_dlist *, t_options *),
+int			dlist_filter(t_hlist *handler_files, t_options *options, 
+				int (*cond)(t_hlist *, t_dlist *, t_options *),
 				int (*f)(t_dlist *, t_options *))
 {
 	t_dlist		*file;
 
-	file = dlist_head_or_tail(files, options);
+	file = dlist_head_or_tail(handler_files, options);
 	while (file)
 	{
-		if (cond(file, options))
+		if (cond(handler_files, file, options))
 			if (f(file, options))
 				return (1);
 		file = dlist_next_or_prev(file, options);

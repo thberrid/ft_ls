@@ -19,10 +19,12 @@ NAME_C	= main.c \
 			filedata.c \
 			filters.c \
 			flags.c \
+			handler.c \
 			list.c \
 			msg.c \
 			options.c \
-			path.c
+			path.c \
+			total.c
 NAME_O	= $(NAME_C:.c=.o)
 NAME_H	= ft_ls.h
 FILES_C	= $(addprefix $(DIR_C)/, $(NAME_C))

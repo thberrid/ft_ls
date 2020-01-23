@@ -25,13 +25,23 @@ void		filedata_del_this(t_dlist *lst)
 	ft_memdel((void **)&lst);
 }
 
+size_t		filedata_get_total(t_dlist *this)
+{
+	t_filedata *filedata;
+
+	filedata = (t_filedata *)this->content;
+//	ft_putnbr(filedata->stat->st_blocks);
+//	ft_putendl(filedata->path);
+	return (filedata->stat->st_blocks);
+}
+
 int			filedata_open_this(t_dlist *this, t_options *options)
 {
 	t_hlist		files;
 	int			retrn;
 	DIR			*dir_open;
 	t_filedata	*root_data;
-	t_dlist		*title;
+	t_dlist		*header;
 
 	root_data = ((t_filedata *)this->content);
 	if (!(dir_open = opendir(root_data->path)))
@@ -40,15 +50,20 @@ int			filedata_open_this(t_dlist *this, t_options *options)
 		return (0);
 	}
 	ft_bzero(&files, sizeof(t_hlist));
+	if (!(files.content = ft_memalloc(sizeof(t_hcontent))))
+		return (1);
 	if ((filedata_readdir(dir_open, &files, this, options)))
 		return (1);
-	title = dlist_head_or_tail(&files, options);
-	if (file_is_fist_elemnt(title, options))
-		pathroot_print(title);
+	header = dlist_head_or_tail(&files, options);
+	if (file_is_first_elemnt(header, options) && !file_is_single(header))
+		pathroot_print(header);
+	if (file_is_first_elemnt(header, options))
+		total_print(&files, options);
 	closedir(dir_open);
 	// if one day u want to sort, thats sould be somewhere here approximatively
 	retrn = core_loop(&files, options);
 	dlist_foreach(&files, &filedata_del_this);
+	ft_memdel((void **)&files.content);
 	return (retrn);
 }
 
