@@ -128,6 +128,12 @@ typedef struct			s_options
 	unsigned int	flags_lower;
 }						t_options;
 
+typedef struct			s_types
+{
+	char			symbol;
+	unsigned int	mask;
+}						t_types;
+
 int						core_loop(t_hlist *files, t_options *options);
 
 /*
