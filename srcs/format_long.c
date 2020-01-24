@@ -40,14 +40,38 @@ void	file_type_print(t_stat *filestat)
 	ft_putchar('?');
 }
 
+void	file_type_permission_print(t_stat *filestat, int level)
+{
+	int						index;
+	static const t_types	types[] =
+	{
+		{'r', __S_IREAD},
+		{'w', __S_IWRITE},
+		{'x', __S_IEXEC},
+		{0, 0x0}
+	};
+
+	index = 0;
+	while (types[index].symbol)
+	{
+		if (((types[index].mask >> level) & filestat->st_mode) == types[index].mask >> level)
+			ft_putchar(types[index].symbol);
+		else
+			ft_putchar('-');
+		index += 1;
+	}
+}
+
 void	format_long_print(t_dlist *elemnt, t_options *options)
 {
 	t_filedata	*filedata;
 
 	filedata = (t_filedata *)(elemnt->content);
 	file_type_print(filedata->stat);
-//	file_permissions_print(filedata);
-//	ft_putnbr(filedata->stat->st_mode);
+	file_type_permission_print(filedata->stat, USR);
+	file_type_permission_print(filedata->stat, GRP);
+	file_type_permission_print(filedata->stat, OTHR);
+	ft_putchar(' ');
 	ft_putstr("\t\t");
 	if (filedata->dirent)
 		ft_putnbr(filedata->dirent->d_type);

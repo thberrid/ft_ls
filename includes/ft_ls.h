@@ -28,12 +28,14 @@
 **
 **	long format:
 **		file type, permissions 
-**			{-...}1{-rwx}3
-**				...
-**				- regular file
+**			{cdb-lsp?}{-rwx} usr, grp, other
 **				c character special
+**				b block
 **				d directory
+**				- regular file
 **				l symbolic link
+**				s socket
+**				p fifo
 **				? other file type
 **		nbr of links
 ** 		owner name
@@ -128,6 +130,10 @@ typedef struct			s_options
 	unsigned int	flags_lower;
 }						t_options;
 
+# define USR	0
+# define GRP	3
+# define OTHR	6
+
 typedef struct			s_types
 {
 	char			symbol;
@@ -220,7 +226,10 @@ void					file_openfail_print(t_filedata *filedata);
 void					file_unexistent_print(t_dlist *lst);
 void					file_print_name(t_dlist *elemnt, t_options *options);
 void					print_usage_and_quit(char invalid_char);
-void					total_print(t_hlist *handler, t_options *options);
+
 void					format_long_print(t_dlist *elemnt, t_options *options);
+void					total_print(t_hlist *handler, t_options *options);
+void					file_type_print(t_stat *filestat);
+void					file_type_permission_print(t_stat *filestat, int level);
 
 #endif
