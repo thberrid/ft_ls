@@ -17,6 +17,7 @@ void		filedata_del_this(t_dlist *lst)
 	t_filedata	*filedata;
 
 	filedata = (t_filedata *)(lst->content);
+	ft_memdel((void **)&filedata->lstat);
 	ft_memdel((void **)&filedata->stat);
 	if (filedata->dirent)
 		ft_memdel((void **)&filedata->dirent);
@@ -30,9 +31,7 @@ size_t		filedata_get_total(t_dlist *this)
 	t_filedata *filedata;
 
 	filedata = (t_filedata *)this->content;
-//	ft_putnbr(filedata->stat->st_blocks);
-//	ft_putendl(filedata->path);
-	return (filedata->stat->st_blocks);
+	return (filedata->lstat->st_blocks);
 }
 
 int			filedata_open_this(t_dlist *this, t_options *options)
@@ -85,7 +84,10 @@ void		file_print_name(t_dlist *elemnt, t_options *options)
 int			filedata_print_this(t_dlist *this, t_options *options)
 {
 	if (flag_is_on(options->flags_lower, FLAG_L))
-		format_long_print(this, options);
+	{
+		if (format_long_print(this, options))
+			return (1);
+	}
 	else
 		file_print_name(this, options);
 	return (0);
@@ -93,6 +95,8 @@ int			filedata_print_this(t_dlist *this, t_options *options)
 
 int			filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path)
 {
+	if (!(filedata->lstat = ft_memalloc(sizeof(t_stat))))
+		return (-1);
 	if (!(filedata->stat = ft_memalloc(sizeof(t_stat))))
 		return (-1);
 	if (dirent)
@@ -103,7 +107,9 @@ int			filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path)
 			return (-1);
 		ft_memcpy(filedata->dirent, dirent, sizeof(t_dirent));
 	}
-	if (lstat(filedata->path, filedata->stat))
+	if (lstat(filedata->path, filedata->lstat))
+		file_openfail_print(filedata);
+	if (stat(filedata->path, filedata->stat))
 		file_openfail_print(filedata);
 	return (0);
 }

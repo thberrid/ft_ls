@@ -119,8 +119,8 @@ int		filter_recursion_dir(t_hlist *handler, t_dlist *file, t_options *options)
 	if (!flag_is_on(options->flags_lower, FLAG_A))
 		if (file_is_hidden(file))
 			return (0);
-	if ((file_is_dir(filedata->stat) && !file_is_dotlink(file) && flag_is_on(options->flags_upper, FLAG_R))
-		|| (file_is_dir(filedata->stat) && !((t_filedata *)file->content)->dirent))
+	if ((file_is_dir(filedata->lstat) && !file_is_dotlink(file) && flag_is_on(options->flags_upper, FLAG_R))
+		|| (file_is_dir(filedata->lstat) && !((t_filedata *)file->content)->dirent))
 		return (1);
 	return (0);
 }

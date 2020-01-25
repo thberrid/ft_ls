@@ -36,13 +36,12 @@
 
 int		core_loop(t_hlist *files, t_options *options)
 {
-	int		retrn;
-
-	retrn = 0;
-	dlist_filter(files, options, &filter_recursion_file, &filedata_print_this);
-	retrn = dlist_filter(files, options,
-		&filter_recursion_dir, &filedata_open_this);
-	return (retrn);
+	if (dlist_filter(files, options, &filter_recursion_file, &filedata_print_this))
+		return (1);
+	if (dlist_filter(files, options,
+		&filter_recursion_dir, &filedata_open_this))
+		return (1);
+	return (0);
 }
 
 int		main(int ac, char **av)

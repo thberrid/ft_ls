@@ -18,12 +18,15 @@
 # include <stdio.h>
 # include <sys/stat.h>
 # include <sys/errno.h>
+# include <pwd.h>
+# include <grp.h>
+# include <time.h>
 
 /*
 ** a: show hidden files .*
 ** l: long and boring format
 ** r: reverse sort
-** t: sort by time modified (recent first) then lexicohraphic
+** t: sort by time modified (recent first) then lexichoraphic
 ** R: Recursive
 **
 **	long format:
@@ -91,6 +94,31 @@ typedef struct stat		t_stat;
 
 typedef struct dirent	t_dirent;
 
+/*
+** struct passwd {
+**     char   *pw_name;       username
+**     char   *pw_passwd;     user password
+**     uid_t   pw_uid;        user ID
+**     gid_t   pw_gid;        group ID
+**     char   *pw_gecos;      user information
+**     char   *pw_dir;        home directory
+**     char   *pw_shell;      shell program
+** };
+*/
+
+typedef struct passwd	t_passwd;
+
+/*
+** struct group {
+**     char   *gr_name;       group name
+**     char   *gr_passwd;     group password
+**     gid_t   gr_gid;        group ID
+**     char  **gr_mem;        group members
+** };
+*/
+
+typedef struct group	t_group;
+
 typedef struct			s_hlist
 {
 	struct s_dlist	*head;
@@ -118,6 +146,7 @@ typedef struct			s_filedata
 {
 	t_dirent	*dirent;
 	t_stat		*stat;
+	t_stat		*lstat;
 	char		*path;
 	DIR			*dir;
 }						t_filedata;
@@ -227,9 +256,15 @@ void					file_unexistent_print(t_dlist *lst);
 void					file_print_name(t_dlist *elemnt, t_options *options);
 void					print_usage_and_quit(char invalid_char);
 
-void					format_long_print(t_dlist *elemnt, t_options *options);
+int						format_long_print(t_dlist *elemnt, t_options *options);
 void					total_print(t_hlist *handler, t_options *options);
+void					file_type_permission_print_all(t_filedata *filedata);
 void					file_type_print(t_stat *filestat);
 void					file_type_permission_print(t_stat *filestat, int level);
+void					file_nbrlinks_print(t_stat *filestat);
+int						file_ownername_print(t_stat *filestat);
+int						file_groupname_print(t_stat *filestat);
+void						file_size_print(t_stat *filestat);
+int						file_date_print(t_stat *filestat);
 
 #endif
