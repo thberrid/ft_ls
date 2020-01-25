@@ -118,12 +118,9 @@ t_dlist		*dlist_next_or_prev(t_dlist *file, t_options *options)
 
 t_dlist		*dlist_head_or_tail(t_hlist *files, t_options *options)
 {
-	t_dlist		*file;
-
-	file = files->head;
 	if (flag_is_on(options->flags_lower, FLAG_R))
-		file = files->tail;
-	return (file);
+		return (files->tail);
+	return (files->head);
 }
 
 int			dlist_filter(t_hlist *handler_files, t_options *options, 

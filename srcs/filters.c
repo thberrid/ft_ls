@@ -56,19 +56,41 @@ int			file_is_single(t_dlist *elemnt)
 	return (0);
 }
 
+static t_dlist *file_skip_unrelevant(t_dlist *elemnt, t_options *options)
+{
+	t_filedata *filedata;
+
+	filedata = (t_filedata *)elemnt->content;
+	while ((elemnt && !filedata->dirent && file_is_dir(filedata->lstat))
+	|| (elemnt && file_is_hidden(elemnt) && !flag_is_on(options->flags_lower, FLAG_A)))
+	{
+		elemnt = dlist_next_or_prev(elemnt, options);
+		if (elemnt)
+			filedata = (t_filedata *)elemnt->content;
+		else
+			return (NULL);
+	}
+	return (elemnt);
+}
+
 int			file_is_first_elemnt(t_dlist *elemnt, t_options *options)
 {
+	elemnt = file_skip_unrelevant(elemnt, options);
+	if (!elemnt)
+		return (1);
 	if (!flag_is_on(options->flags_lower, FLAG_R) && !elemnt->prev)
 		return (1);
 	if (flag_is_on(options->flags_lower, FLAG_R) && !elemnt->next)
-		return (1);
-	if (!((t_filedata *)elemnt->content)->dirent)
 		return (1);
 	return (0);
 }
 
 int			file_is_last_elemnt(t_dlist *elemnt, t_options *options)
 {
+	elemnt = file_skip_unrelevant(elemnt, options);
+//	ft_putend("?");
+	if (!elemnt)
+		return (1);
 	if (!flag_is_on(options->flags_lower, FLAG_R) && !elemnt->next)
 		return (1);
 	if (flag_is_on(options->flags_lower, FLAG_R) && !elemnt->prev)
@@ -102,6 +124,8 @@ int		filter_recursion_file(t_hlist *handler, t_dlist *file, t_options *options)
 	if (!flag_is_on(options->flags_lower, FLAG_A))
 		if (file_is_hidden(file))
 			return (0);
+	if (!((t_filedata *)file->content)->dirent && file_is_dir(((t_filedata *)file->content)->lstat))
+		return (0);
 //	filedata = (t_filedata *)file->content;
 	return (1);
 }

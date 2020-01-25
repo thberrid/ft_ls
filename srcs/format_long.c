@@ -132,8 +132,8 @@ int		format_long_print(t_dlist *elemnt, t_options *options)
 	if (file_date_print(filedata->lstat))
 		return (1);
 	file_print_name(elemnt, options);
-	ft_putstr("\n");
-	if (file_is_last_elemnt(elemnt, options))
-		ft_putchar('\n');
+	ft_putchar('\n');
+//	if (file_is_last_elemnt(elemnt, options))
+//		ft_putchar('\n');
 	return (0);
 }

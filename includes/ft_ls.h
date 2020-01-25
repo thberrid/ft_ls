@@ -22,6 +22,13 @@
 # include <grp.h>
 # include <time.h>
 
+# define DEBUG_MODE 0
+# define LEAKS_MODE 0
+# define DEBUG_BLUE "\e[94m"
+# define DEBUG_GREY "\e[90m"
+# define DEBUG_CLEAR "\e[0m"
+# define DEBUG_TAG "\n--- debug ---\n\n"
+
 /*
 ** a: show hidden files .*
 ** l: long and boring format
@@ -48,18 +55,13 @@
 **		file name
 */
 
-# define FLAGS_ALLOWD "alrtR"
-# define FLAG_A		0
-# define FLAG_L		11
-# define FLAG_R		17
-# define FLAG_T		19
-
-# define DEBUG_MODE 0
-# define LEAKS_MODE 0
-# define DEBUG_BLUE "\e[94m"
-# define DEBUG_GREY "\e[90m"
-# define DEBUG_CLEAR "\e[0m"
-# define DEBUG_TAG "\n--- debug ---\n\n"
+# define FLAGS_ALLOWD 	"alrtR"
+# define FLAGS_LOWER	0
+# define FLAGS_UPPER	1
+# define FLAG_A			0
+# define FLAG_L			11
+# define FLAG_R			17
+# define FLAG_T			19
 
 /*
 ** struct stat {
@@ -164,6 +166,7 @@ typedef struct			s_options
 typedef struct		s_flags_sort
 {
 	int		flag;
+	int		upper_or_lower;
 	int		(*sort_f)(t_dlist *, t_dlist *);
 }					t_flags_sort;
 

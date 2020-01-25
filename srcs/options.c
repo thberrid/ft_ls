@@ -62,14 +62,14 @@ void			options_set_sort(t_options *options)
 	int					index;
 	static t_flags_sort	sorts[] = 
 	{
-		{FLAG_T, &sort_last_mtime},
-		{0, 0x0}
+		{FLAG_T, FLAGS_LOWER, &sort_last_mtime},
+		{0, 0, 0x0}
 	};
 
 	index = 0;
 	while (sorts[index].flag)
 	{
-		if (flag_is_on(options->flags_lower, sorts[index].flag))
+		if (flag_is_on(sorts[index].upper_or_lower == FLAGS_LOWER ? options->flags_lower : options->flags_upper, sorts[index].flag))
 		{
 			options->sort_f = sorts[index].sort_f;
 			return ;

@@ -54,13 +54,20 @@ int			filedata_open_this(t_dlist *this, t_options *options)
 	if ((filedata_readdir(dir_open, &files, this, options)))
 		return (1);
 	header = dlist_head_or_tail(&files, options);
-	if (file_is_first_elemnt(header, options) && !file_is_single(header))
-		pathroot_print(header);
-	if (file_is_first_elemnt(header, options))
+//	if (file_is_first_elemnt(header, options))
+//		ft_putchar('\n');
+//	ft_putendl("?");
+	if (file_is_first_elemnt(this, options) && (!file_is_single(this) || options->operands_invalid->length))
+		pathroot_print(this);
+	if (!files.length)
+		return (0);
+	if (file_is_first_elemnt(header, options) && flag_is_on(options->flags_lower, FLAG_L))
 		total_print(&files, options);
 	closedir(dir_open);
 	// if one day u want to sort, thats sould be somewhere here approximatively
 	retrn = core_loop(&files, options);
+///	if (!file_is_last_elemnt(this, options))
+///		ft_putchar('\n');
 	dlist_foreach(&files, &filedata_del_this);
 	ft_memdel((void **)&files.content);
 	return (retrn);
@@ -70,6 +77,7 @@ void		file_print_name(t_dlist *elemnt, t_options *options)
 {
 	t_filedata	*filedata;
 
+	(void)options;
 	filedata = (t_filedata *)(elemnt->content);	
 	if (filedata->dirent)
 		ft_putstr(filedata->dirent->d_name);
@@ -79,6 +87,7 @@ void		file_print_name(t_dlist *elemnt, t_options *options)
 		ft_putchar('\n');
 	else
 		ft_putchar(' ');
+     
 }
 
 int			filedata_print_this(t_dlist *this, t_options *options)
@@ -90,6 +99,8 @@ int			filedata_print_this(t_dlist *this, t_options *options)
 	}
 	else
 		file_print_name(this, options);
+//	if (file_is_last_elemnt(this, options))
+//		ft_putchar('\n');
 	return (0);
 }
 
@@ -107,9 +118,9 @@ int			filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path)
 			return (-1);
 		ft_memcpy(filedata->dirent, dirent, sizeof(t_dirent));
 	}
-	if (lstat(filedata->path, filedata->lstat))
+	if (lstat(filedata->path, filedata->lstat) && dirent)
 		file_openfail_print(filedata);
-	if (stat(filedata->path, filedata->stat))
+	if (stat(filedata->path, filedata->stat) && dirent)
 		file_openfail_print(filedata);
 	return (0);
 }
@@ -126,6 +137,8 @@ int			filedata_readdir(DIR *dir_open, t_hlist *dest, t_dlist *root_file, t_optio
 	while ((new_dirent = readdir(dir_open)))
 	{
 		ft_bzero(&new_filedata, sizeof(t_filedata));
+		if (!flag_is_on(options->flags_lower, FLAG_A) && new_dirent->d_name[0] == '.')
+			continue ;
 		if (filedata_set_stat(&new_filedata, new_dirent, root_data->path))
 			return (1);
 		if (!(new_lst = dlist_create(&new_filedata, sizeof(t_filedata))))
