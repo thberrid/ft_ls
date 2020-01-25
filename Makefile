@@ -25,6 +25,7 @@ NAME_C	= main.c \
 			msg.c \
 			options.c \
 			path.c \
+			sorts.c \
 			total.c
 NAME_O	= $(NAME_C:.c=.o)
 NAME_H	= ft_ls.h

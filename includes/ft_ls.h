@@ -80,6 +80,7 @@
 */
 
 typedef struct stat		t_stat;
+typedef struct timespec	t_timespec;
 
 /*
 ** struct dirent {
@@ -157,7 +158,14 @@ typedef struct			s_options
 	t_hlist			*operands_invalid;
 	unsigned int	flags_upper;
 	unsigned int	flags_lower;
+	int				(*sort_f)(t_dlist *, t_dlist *);
 }						t_options;
+
+typedef struct		s_flags_sort
+{
+	int		flag;
+	int		(*sort_f)(t_dlist *, t_dlist *);
+}					t_flags_sort;
 
 # define USR	0
 # define GRP	3
@@ -205,6 +213,7 @@ void					handler_update(t_hlist *handler, t_dlist *new_elemnt);
 */
 
 int						options_set(int ac, char **av, t_options *options);
+void					options_set_sort(t_options *options);
 void					options_del(t_options *options);
 int						operands_set(int ac, char **av, t_options *options);
 
@@ -223,16 +232,17 @@ int						file_exists(char *name);
 int						file_is_single(t_dlist *elemnt);
 int						filter_recursion_file(t_hlist *handler, t_dlist *file, t_options *options);
 int						filter_recursion_dir(t_hlist *handler, t_dlist *file, t_options *options);
+int						sort_path_ascii(t_dlist *l1, t_dlist *l2);
+int						sort_last_mtime(t_dlist *l1, t_dlist *l2);
 
 /*
 ** path management functions
 */
 
-int						path_add(char *name, t_hlist *operands);
+int						path_add(char *name, t_hlist *operands, t_options *options);
 void					path_print(t_dlist *lst);
 void					pathroot_print(t_dlist *this);
 char					*path_concat(char *path1, char *path2);
-int						path_sort_ascii(t_dlist *l1, t_dlist *l2);
 
 /*
 ** file, directories

@@ -130,7 +130,7 @@ int			filedata_readdir(DIR *dir_open, t_hlist *dest, t_dlist *root_file, t_optio
 			return (1);
 		if (!(new_lst = dlist_create(&new_filedata, sizeof(t_filedata))))
 			return (1);
-		dlist_insert_before(new_lst, dlist_search(new_lst, dest, &path_sort_ascii), dest);
+		dlist_insert_before(new_lst, dlist_search(new_lst, dest, options->sort_f), dest);
 	}
 	return (0);
 }

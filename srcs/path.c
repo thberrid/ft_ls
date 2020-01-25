@@ -61,12 +61,7 @@ void	pathroot_print(t_dlist *this)
 	ft_putendl(":");
 }
 
-int		path_sort_ascii(t_dlist *l1, t_dlist *l2)
-{
-	return (ft_strcmp(((t_filedata *)l1->content)->path, ((t_filedata *)l2->content)->path));
-}
-
-int		path_add(char *name, t_hlist *operands)
+int		path_add(char *name, t_hlist *operands, t_options *options)
 {
 	t_dlist		*newlst;
 	t_filedata	newfile;
@@ -78,6 +73,6 @@ int		path_add(char *name, t_hlist *operands)
 		return (1);
 	if ((newlst = dlist_create(&newfile, sizeof(t_filedata))) == 0)
 		return (-1);
-	dlist_insert_before(newlst, dlist_search(newlst, operands, &path_sort_ascii), operands);
+	dlist_insert_before(newlst, dlist_search(newlst, operands, options->sort_f), operands);
 	return (0);
 }

@@ -29,11 +29,11 @@ int				operands_set(int ac, char **av, t_options *options)
 		return (1);
 	while (i < ac)
 	{
-		if (path_add(av[i], file_exists(av[i]) ? options->operands : options->operands_invalid) == -1)
+		if (path_add(av[i], file_exists(av[i]) ? options->operands : options->operands_invalid, options) == -1)
 			return (1);
 		i += 1;
 	}
-	if (!options->operands->length && !options->operands_invalid->length && path_add(".", options->operands))
+	if (!options->operands->length && !options->operands_invalid->length && path_add(".", options->operands, options))
 		return (1);
 	dlist_foreach(options->operands_invalid, &file_unexistent_print);
 	return (0);
@@ -57,6 +57,28 @@ static void		options_print(t_options *options)
 	ft_putstr(DEBUG_CLEAR);
 }
 
+void			options_set_sort(t_options *options)
+{
+	int					index;
+	static t_flags_sort	sorts[] = 
+	{
+		{FLAG_T, &sort_last_mtime},
+		{0, 0x0}
+	};
+
+	index = 0;
+	while (sorts[index].flag)
+	{
+		if (flag_is_on(options->flags_lower, sorts[index].flag))
+		{
+			options->sort_f = sorts[index].sort_f;
+			return ;
+		}
+		index += 1;
+	}
+	options->sort_f = &sort_path_ascii;
+}
+
 int				options_set(int ac, char **av, t_options *options)
 {
 	int			retrn;
@@ -71,6 +93,7 @@ int				options_set(int ac, char **av, t_options *options)
 			return (1);
 		}
 	}
+	options_set_sort(options);
 	if (operands_set(ac, av, options))
 		return (1);
 	if (DEBUG_MODE)
