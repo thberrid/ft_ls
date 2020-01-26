@@ -55,7 +55,7 @@ int			file_is_single(t_dlist *elemnt)
 		return (1);
 	return (0);
 }
-
+/*
 static t_dlist *file_skip_unrelevant(t_dlist *elemnt, t_options *options)
 {
 	t_filedata *filedata;
@@ -72,10 +72,10 @@ static t_dlist *file_skip_unrelevant(t_dlist *elemnt, t_options *options)
 	}
 	return (elemnt);
 }
-
+*/
 int			file_is_first_elemnt(t_dlist *elemnt, t_options *options)
 {
-	elemnt = file_skip_unrelevant(elemnt, options);
+//	elemnt = file_skip_unrelevant(elemnt, options);
 	if (!elemnt)
 		return (1);
 	if (!flag_is_on(options->flags_lower, FLAG_R) && !elemnt->prev)
@@ -87,7 +87,7 @@ int			file_is_first_elemnt(t_dlist *elemnt, t_options *options)
 
 int			file_is_last_elemnt(t_dlist *elemnt, t_options *options)
 {
-	elemnt = file_skip_unrelevant(elemnt, options);
+//	elemnt = file_skip_unrelevant(elemnt, options);
 //	ft_putend("?");
 	if (!elemnt)
 		return (1);

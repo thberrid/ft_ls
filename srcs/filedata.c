@@ -54,10 +54,12 @@ int			filedata_open_this(t_dlist *this, t_options *options)
 	if ((filedata_readdir(dir_open, &files, this, options)))
 		return (1);
 	header = dlist_head_or_tail(&files, options);
-//	if (file_is_first_elemnt(header, options))
+//	if (file_is_first_elemnt(this, options) && options->operands->length)
+//		ft_putchar('\n');
+//	if (!file_is_first_elemnt(this, options) || options->operands->length)
 //		ft_putchar('\n');
 //	ft_putendl("?");
-	if (file_is_first_elemnt(this, options) && (!file_is_single(this) || options->operands_invalid->length))
+	if ((!file_is_single(this) || options->operands_invalid->length))
 		pathroot_print(this);
 	if (!files.length)
 		return (0);
@@ -82,12 +84,7 @@ void		file_print_name(t_dlist *elemnt, t_options *options)
 	if (filedata->dirent)
 		ft_putstr(filedata->dirent->d_name);
 	else
-		ft_putstr(filedata->path);
-	if (file_is_last_elemnt(elemnt, options))
-		ft_putchar('\n');
-	else
-		ft_putchar(' ');
-     
+		ft_putstr(filedata->path);     
 }
 
 int			filedata_print_this(t_dlist *this, t_options *options)
@@ -99,8 +96,10 @@ int			filedata_print_this(t_dlist *this, t_options *options)
 	}
 	else
 		file_print_name(this, options);
-//	if (file_is_last_elemnt(this, options))
-//		ft_putchar('\n');
+	if (file_is_last_elemnt(this, options))
+		ft_putchar('\n');
+	else
+		ft_putchar(' ');
 	return (0);
 }
 

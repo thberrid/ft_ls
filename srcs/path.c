@@ -47,19 +47,21 @@ void	path_print(t_dlist *lst)
 
 void	pathroot_print(t_dlist *this)
 {
-	char	*last_slash;
+//	char	*last_slash;
 	char	*pathroot;
-	size_t	len;
+//	size_t	len;
 
 	pathroot = ((t_filedata *)this->content)->path;
 //	if (((t_filedata *)this->content)->dirent)
 //		ft_putendl("?");
-	last_slash = ft_strrchr(pathroot, '/');
+/*	last_slash = ft_strrchr(pathroot, '/');
 	if (last_slash)
 		len = last_slash - pathroot;
 	else
 		len = ft_strlen(pathroot);	
 	ft_putnstr(pathroot, len);
+*/	
+	ft_putstr(pathroot);
 	ft_putendl(":");
 }
 

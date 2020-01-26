@@ -17,12 +17,12 @@ void	file_type_print(t_stat *filestat)
 	int						index;
 	static const t_types	types[] =
 	{
+		{'l', S_IFLNK},
 		{'c', S_IFCHR},
+		{'s', S_IFSOCK},
 		{'d', S_IFDIR},
 		{'b', S_IFBLK},
 		{'-', S_IFREG},
-		{'l', S_IFLNK},
-		{'s', S_IFSOCK},
 		{'p', S_IFIFO},
 		{0, 0x0}
 	};
@@ -65,7 +65,7 @@ void	file_permission_print(t_stat *filestat, int level)
 void	file_nbrlinks_print(t_stat *filestat)
 {
 	ft_putnbr(filestat->st_nlink);
-	ft_putchar(' ');
+	ft_putchar('\t');
 }
 
 void	file_type_permission_print_all(t_filedata *filedata)
@@ -101,19 +101,58 @@ int		file_groupname_print(t_stat *filestat)
 
 void	file_size_print(t_stat *filestat)
 {
+	int		intlen;
 	ft_putnbr(filestat->st_size);
-	ft_putchar(' ');
+	intlen = ft_intlen(filestat->st_size);
+	if (intlen <= 4)
+		ft_putchar('\t');
+	ft_putchar('\t');
 }
 
 int		file_date_print(t_stat *filestat)
 {
 	char	*date;
+	time_t	now;
+	time_t	*file_time;
+	time_t	delta;
 
-	if (!(date = ctime((time_t *)(&filestat->st_mtimespec))))
+	file_time = (time_t *)(&filestat->st_mtimespec);
+	now = time(NULL);
+	delta = *file_time - now;
+	if (delta < 0)
+		delta *= -1;
+	if (!(date = ctime(file_time)))
 		return (1);
-	date[ft_strlen(date) - 2] = '\0';
-	ft_putstr(date);
+	ft_putnstr(date + 4, 7);
+	if (delta < TIME_6_MONTHS)
+		ft_putnstr(date + TIME_HM, TIME_HM_LEN);
+	else
+	{
+		ft_putchar(' ');
+		ft_putnstr(date + TIME_Y, TIME_Y_LEN);
+	}
 	ft_putchar(' ');
+
+//	date[ft_strlen(date) - 9] = '\0';
+//	ft_putstr(date);
+//	ft_putchar(' ');
+	return (0);
+}
+
+int		file_print_link(t_dlist *elemnt)
+{
+	t_filedata	*filedata;
+	char 		buff[PATH_MAX];
+
+	filedata = (t_filedata *)(elemnt->content);
+	if (S_ISLNK(filedata->lstat->st_mode))
+	{
+		ft_putstr(" -> ");
+		ft_bzero(buff, sizeof(buff));
+		if (readlink(filedata->path, buff, sizeof(buff) - 1) < 0)
+			return (1);
+		ft_putstr(buff);
+	}
 	return (0);
 }
 
@@ -124,14 +163,15 @@ int		format_long_print(t_dlist *elemnt, t_options *options)
 	filedata = (t_filedata *)(elemnt->content);
 	file_type_permission_print_all(filedata);
 	file_nbrlinks_print(filedata->lstat);
-	if (file_ownername_print(filedata->lstat))
+	if (file_ownername_print(filedata->stat))
 		return (1);
-	if (file_groupname_print(filedata->lstat))
+	if (file_groupname_print(filedata->stat))
 		return (1);
 	file_size_print(filedata->lstat);
 	if (file_date_print(filedata->lstat))
 		return (1);
 	file_print_name(elemnt, options);
+	file_print_link(elemnt);
 	ft_putchar('\n');
 //	if (file_is_last_elemnt(elemnt, options))
 //		ft_putchar('\n');

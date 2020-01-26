@@ -21,6 +21,7 @@
 # include <pwd.h>
 # include <grp.h>
 # include <time.h>
+# include <limits.h>
 
 # define DEBUG_MODE 0
 # define LEAKS_MODE 0
@@ -174,6 +175,12 @@ typedef struct		s_flags_sort
 # define GRP	3
 # define OTHR	6
 
+# define TIME_Y				20
+# define TIME_Y_LEN			4
+# define TIME_6_MONTHS		15768000
+# define TIME_HM			11
+# define TIME_HM_LEN		5
+
 typedef struct			s_types
 {
 	char			symbol;
@@ -279,5 +286,6 @@ int						file_ownername_print(t_stat *filestat);
 int						file_groupname_print(t_stat *filestat);
 void						file_size_print(t_stat *filestat);
 int						file_date_print(t_stat *filestat);
+int						file_print_link(t_dlist *elemnt);
 
 #endif
