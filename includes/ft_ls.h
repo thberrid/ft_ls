@@ -22,6 +22,7 @@
 # include <grp.h>
 # include <time.h>
 # include <limits.h>
+# include <sys/xattr.h>
 
 # define DEBUG_MODE 0
 # define LEAKS_MODE 0
@@ -234,6 +235,7 @@ int						flag_is_on(unsigned int flags_available, unsigned int flag_code);
 ** filtering condition options
 */
 
+int						link_is_open(t_dlist *file, t_options *options);
 int						file_is_dir(t_stat *filestat);
 int						file_is_first_elemnt(t_dlist *elemnt, t_options *options);
 int						file_is_last_elemnt(t_dlist *elemnt, t_options *options);
@@ -282,10 +284,11 @@ void					file_type_permission_print_all(t_filedata *filedata);
 void					file_type_print(t_stat *filestat);
 void					file_type_permission_print(t_stat *filestat, int level);
 void					file_nbrlinks_print(t_stat *filestat);
-int						file_ownername_print(t_stat *filestat);
-int						file_groupname_print(t_stat *filestat);
-void						file_size_print(t_stat *filestat);
+void					file_ownername_print(t_stat *filestat);
+void					file_groupname_print(t_stat *filestat);
+void					file_size_print(t_stat *filestat);
 int						file_date_print(t_stat *filestat);
 int						file_print_link(t_dlist *elemnt);
+void					file_extend_attr_print(t_filedata *filedata);
 
 #endif

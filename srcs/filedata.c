@@ -59,7 +59,7 @@ int			filedata_open_this(t_dlist *this, t_options *options)
 //	if (!file_is_first_elemnt(this, options) || options->operands->length)
 //		ft_putchar('\n');
 //	ft_putendl("?");
-	if ((!file_is_single(this) || options->operands_invalid->length))
+	if (!file_is_single(this) || options->operands_invalid->length)
 		pathroot_print(this);
 	if (!files.length)
 		return (0);
@@ -96,10 +96,11 @@ int			filedata_print_this(t_dlist *this, t_options *options)
 	}
 	else
 		file_print_name(this, options);
+	if (!flag_is_on(options->flags_lower, FLAG_L))
+		ft_putchar(' ');
 	if (file_is_last_elemnt(this, options))
 		ft_putchar('\n');
-	else
-		ft_putchar(' ');
+//	ft_putchar(' ');
 	return (0);
 }
 
@@ -117,8 +118,10 @@ int			filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path)
 			return (-1);
 		ft_memcpy(filedata->dirent, dirent, sizeof(t_dirent));
 	}
+//	lstat(filedata->path, filedata->lstat);
 	if (lstat(filedata->path, filedata->lstat) && dirent)
 		file_openfail_print(filedata);
+	lstat(filedata->path, filedata->stat);
 	if (stat(filedata->path, filedata->stat) && dirent)
 		file_openfail_print(filedata);
 	return (0);

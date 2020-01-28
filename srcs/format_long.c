@@ -74,29 +74,29 @@ void	file_type_permission_print_all(t_filedata *filedata)
 	file_permission_print(filedata->lstat, USR);
 	file_permission_print(filedata->lstat, GRP);
 	file_permission_print(filedata->lstat, OTHR);
-	ft_putchar(' ');
+	file_extend_attr_print(filedata);
 }
 
-int		file_ownername_print(t_stat *filestat)
+void	file_ownername_print(t_stat *filestat)
 {
 	t_passwd	*passwd;
 
 	if (!(passwd = getpwuid(filestat->st_uid)))
-		return (1);
-	ft_putstr(passwd->pw_name);
+		ft_putstr("no owner");
+	else
+		ft_putstr(passwd->pw_name);
 	ft_putchar(' ');
-	return (0);
 }
 
-int		file_groupname_print(t_stat *filestat)
+void	file_groupname_print(t_stat *filestat)
 {
 	t_group	*group;
 
 	if (!(group = getgrgid(filestat->st_gid)))
-		return (1);
-	ft_putstr(group->gr_name);
+		ft_putstr("no group");
+	else
+		ft_putstr(group->gr_name);
 	ft_putchar(' ');
-	return (0);
 }
 
 void	file_size_print(t_stat *filestat)
@@ -156,6 +156,15 @@ int		file_print_link(t_dlist *elemnt)
 	return (0);
 }
 
+void	file_extend_attr_print(t_filedata *filedata)
+{
+	if (listxattr(filedata->path, NULL, 0, XATTR_NOFOLLOW) > 0)
+		ft_putchar('@');
+	else
+		ft_putchar(' ');
+	ft_putchar(' ');
+}
+
 int		format_long_print(t_dlist *elemnt, t_options *options)
 {
 	t_filedata	*filedata;
@@ -163,10 +172,8 @@ int		format_long_print(t_dlist *elemnt, t_options *options)
 	filedata = (t_filedata *)(elemnt->content);
 	file_type_permission_print_all(filedata);
 	file_nbrlinks_print(filedata->lstat);
-	if (file_ownername_print(filedata->stat))
-		return (1);
-	if (file_groupname_print(filedata->stat))
-		return (1);
+	file_ownername_print(filedata->stat);
+	file_groupname_print(filedata->lstat);
 	file_size_print(filedata->lstat);
 	if (file_date_print(filedata->lstat))
 		return (1);

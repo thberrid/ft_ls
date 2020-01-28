@@ -16,6 +16,8 @@ void	file_openfail_print(t_filedata *filedata)
 {
 	char	*filename;
 
+	if (errno == ELOOP)
+		return
 	ft_putendl_fd(filedata->path, 2);
 	ft_putstr_fd("ft_ls: ", 2);
 	filename = ft_strrchr(filedata->path, '/');

@@ -25,8 +25,8 @@ int		sort_last_mtime(t_dlist *l1, t_dlist *l2)
 	if (delta_sec)
 		return (((delta_sec < 0) ? 1 : 0));
 	delta_nsec = file1_mtime.tv_nsec - file2_mtime.tv_nsec;
-	if (delta_nsec)
-		return (((delta_nsec < 0) ? 1 : 0));
+//	if (delta_nsec)
+//		return (((delta_nsec < 0) ? 1 : 0));
 	return (sort_path_ascii(l1, l2));
 }
 

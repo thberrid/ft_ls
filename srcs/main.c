@@ -20,17 +20,17 @@
 **
 **	---
 **
-**	print(list, options): 
+**	core_loop(list, options): 
 **		foreach:
 **			if !flag(options.R) || (flag(options.R) && !dir) || !!dirent
-**				print name
+**				print
 **				move_ptr(options.r, list.this)
 **		if (flag(options.R) || !this.dirent)
 **			foreach:
 **				if dir
-**					print name
-**					open, readdir, close
-**					print(this->subfiles)
+**					print
+**					this->subfiles = open, readdir, close
+**					core_loop(this->subfiles)
 **				move_ptr(options.r, list.this)
 */
 
@@ -47,9 +47,8 @@ int		core_loop(t_hlist *files, t_options *options)
 int		main(int ac, char **av)
 {
 	t_options	options;
-	int			retrn;
 
-	if ((retrn = options_set(ac, av, &options)))
+	if (options_set(ac, av, &options))
 		return (0);
 	if (core_loop(options.operands, &options))
 		ft_putendl(strerror(errno));

@@ -116,17 +116,37 @@ int		file_is_dotlink(t_dlist *file)
 	return (0);
 }
 
+int		link_is_open(t_dlist *file, t_options *options)
+{
+	t_filedata	*filedata;
+	char		*filename;
+
+	(void)options;
+	filedata = (t_filedata *)file->content;
+	filename = filedata->path;
+	if (S_ISLNK(filedata->lstat->st_mode) && filename[ft_strlen(filename) - 1] == '/')
+	{	ft_putendl("ono 2");
+		return (1);
+	}
+//	ft_putchar(filename[ft_strlen(filename) - 1]);
+//	ft_putendl(" ono");
+	return (0);
+}
+
 int		filter_recursion_file(t_hlist *handler, t_dlist *file, t_options *options)
 {
-//	t_filedata	*filedata;
+	t_filedata	*filedata;
 
 	(void)handler;
+	filedata = (t_filedata *)file->content;
 	if (!flag_is_on(options->flags_lower, FLAG_A))
 		if (file_is_hidden(file))
 			return (0);
-	if (!((t_filedata *)file->content)->dirent && file_is_dir(((t_filedata *)file->content)->lstat))
+	if (flag_is_on(options->flags_lower, FLAG_L) && S_ISLNK(filedata->lstat->st_mode) && !link_is_open(file, options))
+		return (1);
+//	if (!((t_filedata *)file->content)->dirent && S_ISLNK(((t_filedata *)file->content)->lstat->st_mode))
+	if (!((t_filedata *)file->content)->dirent && file_is_dir(filedata->stat))
 		return (0);
-//	filedata = (t_filedata *)file->content;
 	return (1);
 }
 
@@ -142,9 +162,11 @@ int		filter_recursion_dir(t_hlist *handler, t_dlist *file, t_options *options)
 	filedata = (t_filedata *)file->content;
 	if (!flag_is_on(options->flags_lower, FLAG_A))
 		if (file_is_hidden(file))
-			return (0);
-	if ((file_is_dir(filedata->lstat) && !file_is_dotlink(file) && flag_is_on(options->flags_upper, FLAG_R))
-		|| (file_is_dir(filedata->lstat) && !((t_filedata *)file->content)->dirent))
+			return (0);	
+	if (flag_is_on(options->flags_lower, FLAG_L) && S_ISLNK(filedata->lstat->st_mode) && !link_is_open(file, options))
+		return (0);
+	if ((file_is_dir(filedata->stat) && !file_is_dotlink(file) && flag_is_on(options->flags_upper, FLAG_R))
+		|| (file_is_dir(filedata->stat) && !((t_filedata *)file->content)->dirent))
 		return (1);
 	return (0);
 }
