@@ -178,7 +178,7 @@ typedef struct			s_flags_sort
 
 # define TIME_Y				20
 # define TIME_Y_LEN			4
-# define TIME_6_MONTHS		15768000
+# define TIME_6_MONTHS		15700000
 # define TIME_HM			11
 # define TIME_HM_LEN		5
 
