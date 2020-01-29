@@ -30,7 +30,6 @@ static int	get_decimal(float nbr, unsigned int decimal)
 
 void		ft_putfloat(float nbr, int precision)
 {
-//	int		i;
 	int		int_part;
 
 	if (nbr < 0)
@@ -43,7 +42,6 @@ void		ft_putfloat(float nbr, int precision)
 	nbr -= int_part;
 	if (precision)
 		ft_putchar('.');
-//	i = 0;
 	while (nbr && precision)
 	{
 		int_part = get_decimal(nbr, 1);
