@@ -12,28 +12,6 @@
 
 #include <ft_ls.h>
 
-/*	moove_ptr(flag r, lst_this)
-**		if (options.r)
-**			list = list.prev
-**		else
-**			list = list.next
-**
-**	---
-**
-**	core_loop(list, options): 
-**		foreach:
-**			if !flag(options.R) || (flag(options.R) && !dir) || !!dirent
-**				print
-**				move_ptr(options.r, list.this)
-**		if (flag(options.R) || !this.dirent)
-**			foreach:
-**				if dir
-**					print
-**					this->subfiles = open, readdir, close
-**					core_loop(this->subfiles)
-**				move_ptr(options.r, list.this)
-*/
-
 int		core_loop(t_hlist *files, t_options *options)
 {
 	if (dlist_filter(files, options, &filter_printfile, &filedata_print_this))

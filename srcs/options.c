@@ -29,11 +29,13 @@ int				operands_set(int ac, char **av, t_options *options)
 		return (1);
 	while (i < ac)
 	{
-		if (path_add(av[i], file_exists(av[i]) ? options->operands : options->operands_invalid, options) == -1)
+		if (path_add(av[i], file_exists(av[i])
+			? options->operands : options->operands_invalid, options) == -1)
 			return (1);
 		i += 1;
 	}
-	if (!options->operands->length && !options->operands_invalid->length && path_add(".", options->operands, options))
+	if (!options->operands->length && !options->operands_invalid->length
+		&& path_add(".", options->operands, options))
 		return (1);
 	dlist_foreach(options->operands_invalid, &file_unexistent_print);
 	return (0);
@@ -60,8 +62,7 @@ static void		options_print(t_options *options)
 void			options_set_sort(t_options *options)
 {
 	int					index;
-	static t_flags_sort	sorts[] = 
-	{
+	static t_flags_sort	sorts[] = {
 		{FLAG_T, FLAGS_LOWER, &sort_last_mtime},
 		{0, 0, 0x0}
 	};
@@ -69,7 +70,8 @@ void			options_set_sort(t_options *options)
 	index = 0;
 	while (sorts[index].flag)
 	{
-		if (flag_is_on(sorts[index].upper_or_lower == FLAGS_LOWER ? options->flags_lower : options->flags_upper, sorts[index].flag))
+		if (flag_is_on(sorts[index].upper_or_lower == FLAGS_LOWER
+			? options->flags_lower : options->flags_upper, sorts[index].flag))
 		{
 			options->sort_f = sorts[index].sort_f;
 			return ;
@@ -96,15 +98,12 @@ int				options_set(int ac, char **av, t_options *options)
 	options_set_sort(options);
 	if (operands_set(ac, av, options))
 		return (1);
-	if (flag_is_on(options->flags_upper, FLAG_R))
-		if (dlist_filter(options->operands, options, &filter_unopenable, &filedata_print_this))
-			return (1);
 	if (DEBUG_MODE)
 		options_print(options);
 	return (0);
 }
 
-void		options_del(t_options *options)
+void			options_del(t_options *options)
 {
 	dlist_foreach(options->operands, &filedata_del_this);
 	dlist_foreach(options->operands_invalid, &filedata_del_this);

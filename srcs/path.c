@@ -66,6 +66,7 @@ int		path_add(char *name, t_hlist *operands, t_options *options)
 		return (1);
 	if ((newlst = dlist_create(&newfile, sizeof(t_filedata))) == 0)
 		return (-1);
-	dlist_insert_before(newlst, dlist_search(newlst, operands, options->sort_f), operands);
+	dlist_insert_before(newlst,
+		dlist_search(newlst, operands, options->sort_f), operands);
 	return (0);
 }

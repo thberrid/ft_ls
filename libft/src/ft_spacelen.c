@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handler.c                                          :+:      :+:    :+:   */
+/*   ft_spacelen.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thberrid <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/01/22 06:49:46 by thberrid          #+#    #+#             */
-/*   Updated: 2020/01/22 06:49:49 by thberrid         ###   ########.fr       */
+/*   Created: 2020/01/29 22:16:17 by thberrid          #+#    #+#             */
+/*   Updated: 2020/01/29 22:18:43 by thberrid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_ls.h>
+#include <libft.h>
 
-t_hlist		*handler_create(t_hlist **handler)
+int		ft_spacelen(char *str)
 {
-	if (!(*handler = ft_memalloc(sizeof(t_hlist))))
-		return (NULL);
-	if (!((*handler)->content = ft_memalloc(sizeof(t_hcontent))))
-		return (NULL);
-	return (*handler);
-}
+	int		i;
 
-void		handler_update(t_hlist *handler, t_dlist *new_elemnt)
-{
-	handler->length += 1;
-	((t_hcontent *)handler->content)->total += filedata_get_total(new_elemnt);
+	i = 0;
+	while (str[i] && ft_isspace(str[i]))
+		i += 1;
+	return (i);
 }

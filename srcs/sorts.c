@@ -32,5 +32,6 @@ int		sort_last_mtime(t_dlist *l1, t_dlist *l2)
 
 int		sort_path_ascii(t_dlist *l1, t_dlist *l2)
 {
-	return (ft_strcmp(((t_filedata *)l1->content)->path, ((t_filedata *)l2->content)->path));
+	return (ft_strcmp(((t_filedata *)l1->content)->path,
+		((t_filedata *)l2->content)->path));
 }

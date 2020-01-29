@@ -16,17 +16,23 @@ DIR_C 	= srcs
 DIR_O	= obj
 DIR_H	= includes
 NAME_C	= main.c \
-			format_long.c \
 			filedata.c \
+			filedata_open.c \
+			filedata_print.c \
+			files_list.c \
 			filters.c \
+			filters_files.c \
 			flags.c \
+			format_long.c \
+			format_long_owners.c \
+			format_long_perm.c \
 			handler.c \
 			list.c \
+			list_browse.c \
 			msg.c \
 			options.c \
 			path.c \
-			sorts.c \
-			total.c
+			sorts.c
 NAME_O	= $(NAME_C:.c=.o)
 NAME_H	= ft_ls.h
 FILES_C	= $(addprefix $(DIR_C)/, $(NAME_C))

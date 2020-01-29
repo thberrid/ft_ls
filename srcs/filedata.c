@@ -34,81 +34,8 @@ size_t		filedata_get_total(t_dlist *this)
 	return (filedata->lstat->st_blocks);
 }
 
-int			filedata_open_this(t_dlist *this, t_options *options)
-{
-	t_hlist		files;
-	int			retrn;
-	DIR			*dir_open;
-	t_filedata	*root_data;
-	t_dlist		*header;
-
-	root_data = ((t_filedata *)this->content);
-	if (!(dir_open = opendir(root_data->path)))
-	{
-		file_openfail_print(root_data);
-		return (0);
-	}
-	ft_bzero(&files, sizeof(t_hlist));
-	if (!(files.content = ft_memalloc(sizeof(t_hcontent))))
-		return (1);
-	if ((filedata_readdir(dir_open, &files, this, options)))
-		return (1);
-	closedir(dir_open);
-	header = dlist_head_or_tail(&files, options);
-//	if (!file_is_single(this) || options->operands_invalid->length)
-//	if ((!file_is_single(this) || options->operands_invalid->length) && !root_data->dirent && file_is_dir(root_data->lstat))
-	if (file_is_dir(root_data->stat)
-		&& ((file_is_single(this) && (options->operands_invalid->length || root_data->dirent)) || (!file_is_single(this))))
-		pathroot_print(this);
-	if (!files.length)
-	{
-		ft_memdel((void **)&files.content);
-		return (0);
-	}
-	if (file_is_first_elemnt(header, options) && flag_is_on(options->flags_lower, FLAG_L) && file_is_x(root_data->lstat))
-	{
-//		if ((!file_is_single(this) && !root_data->dirent) && (file_is_dir(root_data->lstat) || options->operands_invalid->length))
-//			pathroot_print(this);	
-		total_print(&files, options);
-	}
-	// if one day u want to sort, thats sould be somewhere here approximatively
-	retrn = core_loop(&files, options);
-	dlist_foreach(&files, &filedata_del_this);
-	ft_memdel((void **)&files.content);
-	return (retrn);
-}
-
-void		file_print_name(t_dlist *elemnt, t_options *options)
-{
-	t_filedata	*filedata;
-
-	(void)options;
-	filedata = (t_filedata *)(elemnt->content);	
-	if (filedata->dirent)
-		ft_putstr(filedata->dirent->d_name);
-	else
-		ft_putstr(filedata->path);     
-}
-
-int			filedata_print_this(t_dlist *this, t_options *options)
-{
-	if (!((t_filedata *)this->content)->stat->st_mode && flag_is_on(options->flags_lower, FLAG_L))
-		return (0);
-	if (flag_is_on(options->flags_lower, FLAG_L))
-	{
-		if (format_long_print(this, options))
-			return (1);
-	}
-	else
-		file_print_name(this, options);
-	if (!flag_is_on(options->flags_lower, FLAG_L))
-		ft_putchar(' ');
-	if (file_is_last_elemnt(this, options))
-		ft_putchar('\n');
-//	ft_putchar(' ');
-	return (0);
-}
-int			filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path)
+int			filedata_set_stat
+	(t_filedata *filedata, t_dirent *dirent, char *root_path)
 {
 	if (!(filedata->lstat = ft_memalloc(sizeof(t_stat))))
 		return (-1);
@@ -122,34 +49,9 @@ int			filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path)
 			return (-1);
 		ft_memcpy(filedata->dirent, dirent, sizeof(t_dirent));
 	}
-//	lstat(filedata->path, filedata->lstat);
 	if (lstat(filedata->path, filedata->lstat) && dirent)
 		file_openfail_print(filedata);
-//	lstat(filedata->path, filedata->stat);
 	if (stat(filedata->path, filedata->stat) && dirent)
 		file_openfail_print(filedata);
-	return (0);
-}
-
-int			filedata_readdir(DIR *dir_open, t_hlist *dest, t_dlist *root_file, t_options *options)
-{
-	t_dirent	*new_dirent;
-	t_dlist		*new_lst;
-	t_filedata	new_filedata;
-	t_filedata	*root_data;
-
-	(void)options;
-	root_data = ((t_filedata *)root_file->content);
-	while ((new_dirent = readdir(dir_open)))
-	{
-		ft_bzero(&new_filedata, sizeof(t_filedata));
-		if (!flag_is_on(options->flags_lower, FLAG_A) && new_dirent->d_name[0] == '.')
-			continue ;
-		if (filedata_set_stat(&new_filedata, new_dirent, root_data->path))
-			return (1);
-		if (!(new_lst = dlist_create(&new_filedata, sizeof(t_filedata))))
-			return (1);
-		dlist_insert_before(new_lst, dlist_search(new_lst, dest, options->sort_f), dest);
-	}
 	return (0);
 }

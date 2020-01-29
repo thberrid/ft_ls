@@ -61,7 +61,8 @@ void		dlist_unshift(t_dlist *lst, t_hlist *main)
 	}
 }
 
-void		dlist_insert_before(t_dlist *new_elemnt, t_dlist *ref, t_hlist *handler)
+void		dlist_insert_before
+	(t_dlist *new_elemnt, t_dlist *ref, t_hlist *handler)
 {
 	t_dlist *previous;
 
@@ -79,78 +80,4 @@ void		dlist_insert_before(t_dlist *new_elemnt, t_dlist *ref, t_hlist *handler)
 	ref->prev = new_elemnt;
 	if (handler->head == ref)
 		handler->head = new_elemnt;
-}
-
-t_dlist		*dlist_search(t_dlist *new_elemnt, t_hlist *main, int (*f)(t_dlist *, t_dlist *))
-{
-	t_dlist	*this;
-
-	this = main->head;
-	while (this)
-	{
-		if (f(new_elemnt, this) <= 0)
-			return (this);
-		this = this->next;
-	}
-	return (this);
-}
-
-void		dlist_foreach(t_hlist *main, void (*f)(t_dlist *))
-{
-	t_dlist		*lst;
-	t_dlist		*next;
-
-	next = main->head;
-	while (next)
-	{
-		lst = next;
-		next = lst->next;
-		f(lst);
-	}
-}
-
-t_dlist		*dlist_next_or_prev(t_dlist *file, t_options *options)
-{
-	if (flag_is_on(options->flags_lower, FLAG_R))
-		return (file->prev);
-	return (file->next);
-}
-
-t_dlist		*dlist_head_or_tail(t_hlist *files, t_options *options)
-{
-	if (flag_is_on(options->flags_lower, FLAG_R))
-		return (files->tail);
-	return (files->head);
-}
-
-int			dlist_filter(t_hlist *handler_files, t_options *options, 
-				int (*cond)(t_hlist *, t_dlist *, t_options *),
-				int (*f)(t_dlist *, t_options *))
-{
-	t_dlist		*file;
-
-	file = dlist_head_or_tail(handler_files, options);
-	while (file)
-	{
-		if (cond(handler_files, file, options))
-			if (f(file, options))
-				return (1);
-		file = dlist_next_or_prev(file, options);
-	}
-	return (0);
-}
-
-int			dlist_map(t_hlist *dest, t_hlist *src, void *options,
-			int (*f)(t_hlist*, t_dlist*, void *options))
-{
-	t_dlist	*this;
-
-	this = src->head;
-	while (this)
-	{
-		if (f(dest, this, options))
-			return (1);
-		this = this->next;
-	}
-	return (0);
 }

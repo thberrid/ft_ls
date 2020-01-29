@@ -39,7 +39,7 @@
 ** R: Recursive
 **
 **	long format:
-**		file type, permissions 
+**		file type, permissions
 **			{cdb-lsp?}{-rwx} usr, grp, other
 **				c character special
 **				b block
@@ -165,12 +165,12 @@ typedef struct			s_options
 	int				(*sort_f)(t_dlist *, t_dlist *);
 }						t_options;
 
-typedef struct		s_flags_sort
+typedef struct			s_flags_sort
 {
 	int		flag;
 	int		upper_or_lower;
 	int		(*sort_f)(t_dlist *, t_dlist *);
-}					t_flags_sort;
+}						t_flags_sort;
 
 # define USR	0
 # define GRP	3
@@ -203,10 +203,8 @@ void					dlist_foreach(t_hlist *main, void (*f)(t_dlist *));
 t_dlist					*dlist_head_or_tail(t_hlist *files, t_options *options);
 t_dlist					*dlist_next_or_prev(t_dlist *file, t_options *options);
 int						dlist_filter(t_hlist *files, t_options *options,
-							int (*cond)(t_hlist *handler, t_dlist *, t_options *), 
+							int (*cond)(t_hlist *, t_dlist *, t_options *),
 							int (*f)(t_dlist *, t_options *));
-int						dlist_map(t_hlist *dest, t_hlist *src, void *options,
-							int (*f)(t_hlist*, t_dlist*, void *options));
 void					dlist_insert_before(t_dlist *new_elemnt, t_dlist *ref,
 							t_hlist *operands);
 t_dlist					*dlist_search(t_dlist *new_elemnt, t_hlist *main,
@@ -229,7 +227,8 @@ void					options_del(t_options *options);
 int						operands_set(int ac, char **av, t_options *options);
 
 char					flags_set(int ac, char **av, t_options *options);
-int						flag_is_on(unsigned int flags_available, unsigned int flag_code);
+int						flag_is_on(unsigned int flags_available,
+							unsigned int flag_code);
 
 /*
 ** filtering condition options
@@ -237,14 +236,19 @@ int						flag_is_on(unsigned int flags_available, unsigned int flag_code);
 
 int						link_is_open(t_dlist *file, t_options *options);
 int						file_is_dir(t_stat *filestat);
+int						file_is_dotlink(t_dlist *file);
 int						file_is_x(t_stat *filestat);
-int						file_is_first_elemnt(t_dlist *elemnt, t_options *options);
-int						file_is_last_elemnt(t_dlist *elemnt, t_options *options);
+int						file_is_first_elemnt(t_dlist *elemnt,
+							t_options *options);
+int						file_is_last_elemnt(t_dlist *elemnt,
+							t_options *options);
 int						file_is_hidden(t_dlist *file);
 int						file_exists(char *name);
 int						file_is_single(t_dlist *elemnt);
-int						filter_printfile(t_hlist *handler, t_dlist *file, t_options *options);
-int						filter_openfile(t_hlist *handler, t_dlist *file, t_options *options);
+int						filter_printfile(t_hlist *handler, t_dlist *file,
+							t_options *options);
+int						filter_openfile(t_hlist *handler, t_dlist *file,
+							t_options *options);
 int						sort_path_ascii(t_dlist *l1, t_dlist *l2);
 int						sort_last_mtime(t_dlist *l1, t_dlist *l2);
 
@@ -252,7 +256,8 @@ int						sort_last_mtime(t_dlist *l1, t_dlist *l2);
 ** path management functions
 */
 
-int						path_add(char *name, t_hlist *operands, t_options *options);
+int						path_add(char *name, t_hlist *operands,
+							t_options *options);
 void					path_print(t_dlist *lst);
 void					pathroot_print(t_dlist *this);
 char					*path_concat(char *path1, char *path2);
@@ -265,8 +270,10 @@ void					filedata_del_this(t_dlist *lst);
 
 int						filedata_print_this(t_dlist *this, t_options *options);
 int						filedata_open_this(t_dlist *this, t_options *options);
-int						filedata_readdir(DIR *dir_open, t_hlist *dest, t_dlist *root_file, t_options *options);
-int						filedata_set_stat(t_filedata *filedata, t_dirent *dirent, char *root_path);
+int						filedata_readdir(DIR *dir_open, t_hlist *dest,
+							t_dlist *root_file, t_options *options);
+int						filedata_set_stat(t_filedata *filedata,
+							t_dirent *dirent, char *root_path);
 
 size_t					filedata_get_total(t_dlist *this);
 
@@ -277,6 +284,8 @@ size_t					filedata_get_total(t_dlist *this);
 void					file_openfail_print(t_filedata *filedata);
 void					file_unexistent_print(t_dlist *lst);
 void					file_print_name(t_dlist *elemnt, t_options *options);
+int						filelist_header_print(t_hlist *files, t_dlist *this,
+							t_filedata *root_data, t_options *options);
 void					print_usage_and_quit(char invalid_char);
 
 int						format_long_print(t_dlist *elemnt, t_options *options);
