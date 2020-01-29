@@ -36,10 +36,10 @@
 
 int		core_loop(t_hlist *files, t_options *options)
 {
-	if (dlist_filter(files, options, &filter_recursion_file, &filedata_print_this))
+	if (dlist_filter(files, options, &filter_printfile, &filedata_print_this))
 		return (1);
 	if (dlist_filter(files, options,
-		&filter_recursion_dir, &filedata_open_this))
+		&filter_openfile, &filedata_open_this))
 		return (1);
 	return (0);
 }

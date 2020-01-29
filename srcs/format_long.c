@@ -109,6 +109,16 @@ void	file_size_print(t_stat *filestat)
 	ft_putchar('\t');
 }
 
+int		ft_spacelen(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i] && ft_isspace(str[i]))
+		i += 1;
+	return (i);
+}
+
 int		file_date_print(t_stat *filestat)
 {
 	char	*date;
@@ -128,8 +138,11 @@ int		file_date_print(t_stat *filestat)
 		ft_putnstr(date + TIME_HM, TIME_HM_LEN);
 	else
 	{
+	//	ft_putstr("ono ");
+	//	ft_putendl(date);
 		ft_putchar(' ');
-		ft_putnstr(date + TIME_Y, TIME_Y_LEN);
+		date[ft_strlen(date) - 1] = '\0';
+		ft_putstr(date + TIME_Y + ft_spacelen(date + TIME_Y));
 	}
 	ft_putchar(' ');
 

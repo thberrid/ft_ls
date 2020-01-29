@@ -85,7 +85,7 @@ int				options_set(int ac, char **av, t_options *options)
 
 	retrn = 0;
 	ft_bzero(options, sizeof(t_options));
-	if (ac > 1 && av[1][0] == '-' && av[1][1] != '-')
+	if (ac > 1 && av[1][0] == '-')
 	{
 		if ((retrn = flags_set(ac, av, options)))
 		{
@@ -96,6 +96,9 @@ int				options_set(int ac, char **av, t_options *options)
 	options_set_sort(options);
 	if (operands_set(ac, av, options))
 		return (1);
+	if (flag_is_on(options->flags_upper, FLAG_R))
+		if (dlist_filter(options->operands, options, &filter_unopenable, &filedata_print_this))
+			return (1);
 	if (DEBUG_MODE)
 		options_print(options);
 	return (0);

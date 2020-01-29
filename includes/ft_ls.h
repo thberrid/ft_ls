@@ -237,13 +237,14 @@ int						flag_is_on(unsigned int flags_available, unsigned int flag_code);
 
 int						link_is_open(t_dlist *file, t_options *options);
 int						file_is_dir(t_stat *filestat);
+int						file_is_x(t_stat *filestat);
 int						file_is_first_elemnt(t_dlist *elemnt, t_options *options);
 int						file_is_last_elemnt(t_dlist *elemnt, t_options *options);
 int						file_is_hidden(t_dlist *file);
 int						file_exists(char *name);
 int						file_is_single(t_dlist *elemnt);
-int						filter_recursion_file(t_hlist *handler, t_dlist *file, t_options *options);
-int						filter_recursion_dir(t_hlist *handler, t_dlist *file, t_options *options);
+int						filter_printfile(t_hlist *handler, t_dlist *file, t_options *options);
+int						filter_openfile(t_hlist *handler, t_dlist *file, t_options *options);
 int						sort_path_ascii(t_dlist *l1, t_dlist *l2);
 int						sort_last_mtime(t_dlist *l1, t_dlist *l2);
 

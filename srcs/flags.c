@@ -36,9 +36,11 @@ char		flags_set(int ac, char **av, t_options *options)
 	int		j;
 
 	i = 1;
-	while (i < ac && av[i][0] == '-' && av[i][1] != '-')
+	while (i < ac && av[i][0] == '-')
 	{
 		j = 1;
+		if (av[i][1] == '-' && ft_strlen(av[i]) > 2)
+			return (av[i][1]);
 		while (av[i][j])
 		{
 			if (flags_add(av[i][j], options))

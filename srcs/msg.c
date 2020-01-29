@@ -17,8 +17,14 @@ void	file_openfail_print(t_filedata *filedata)
 	char	*filename;
 
 	if (errno == ELOOP)
-		return
-	ft_putendl_fd(filedata->path, 2);
+		return ;
+	if (!filedata->lstat->st_mode)
+		return ;
+	ft_putstr_fd(filedata->path, 1);
+	if (file_is_dir(filedata->lstat))
+		ft_putendl(":");
+	else
+		ft_putendl("");
 	ft_putstr_fd("ft_ls: ", 2);
 	filename = ft_strrchr(filedata->path, '/');
 	if (filename)

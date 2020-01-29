@@ -12,6 +12,14 @@
 
 #include <ft_ls.h>
 
+
+int			file_is_x(t_stat *filestat)
+{
+	if ((filestat->st_mode & S_IEXEC) == S_IEXEC)
+		return (1);
+	return (0);
+}
+
 int			file_is_dir(t_stat *stat)
 {
 	if (S_ISDIR(stat->st_mode))
@@ -98,11 +106,6 @@ int			file_is_last_elemnt(t_dlist *elemnt, t_options *options)
 	return (0);
 }
 
-/*
-** !dirent && is_dir: 0
-** if !flag(options.R) || (flag(options.R) && !dir)
-*/
-
 int		file_is_dotlink(t_dlist *file)
 {
 	t_filedata	*filedata;
@@ -125,15 +128,27 @@ int		link_is_open(t_dlist *file, t_options *options)
 	filedata = (t_filedata *)file->content;
 	filename = filedata->path;
 	if (S_ISLNK(filedata->lstat->st_mode) && filename[ft_strlen(filename) - 1] == '/')
-	{	ft_putendl("ono 2");
 		return (1);
-	}
-//	ft_putchar(filename[ft_strlen(filename) - 1]);
-//	ft_putendl(" ono");
 	return (0);
 }
 
-int		filter_recursion_file(t_hlist *handler, t_dlist *file, t_options *options)
+/*
+** !dirent && is_dir: 0
+** if !flag(options.R) || (flag(options.R) && !dir)
+*/
+
+/*
+int		filter_unopenable(t_hlist *handler, t_dlist *file, t_options *options)
+{
+	t_filedata	*filedata;
+
+	(void)handler;
+	filedata = (t_filedata *)file->content;
+	if ()
+}
+*/
+
+int		filter_printfile(t_hlist *handler, t_dlist *file, t_options *options)
 {
 	t_filedata	*filedata;
 
@@ -154,7 +169,7 @@ int		filter_recursion_file(t_hlist *handler, t_dlist *file, t_options *options)
 ** !dirent means core_loop is working on operands
 */
 
-int		filter_recursion_dir(t_hlist *handler, t_dlist *file, t_options *options)
+int		filter_openfile(t_hlist *handler, t_dlist *file, t_options *options)
 {
 	t_filedata *filedata;
 
